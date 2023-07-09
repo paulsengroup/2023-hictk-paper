@@ -9,31 +9,54 @@ nextflow.enable.dsl=2
 workflow {
     Channel.fromPath(params.pairs, checkIfExists: true).set { pairs }
     def chrom_sizes = file(params.chrom_sizes, checkIfExists: true)
-    def resolutions = params.resolutions.join(",")
+
+    prepare_pairs_for_juicer(pairs)
 
     pairs_to_hic8(
         chrom_sizes,
-        pairs,
-        resolutions
+        prepare_pairs_for_juicer.out.txt,
+        params.resolutions.join(",")
     )
 
     pairs_to_hic9(
         chrom_sizes,
-        pairs,
-        resolutions
+        prepare_pairs_for_juicer.out.txt,
+        params.resolutions.join(",")
     )
 
     pairs_to_cool(
         pairs,
         chrom_sizes,
-        resolutions.min(),
+        params.resolutions.min(),
         params.assembly
     )
 
     cooler_zoomify(
         pairs_to_cool.out.cool,
-        params.resolutions
+        params.resolutions.join(",")
     )
+}
+
+process prepare_pairs_for_juicer {
+    label 'process_high'
+
+    tag "${pairs.simpleName}"
+
+    input:
+        path pairs
+
+    output:
+        path "*.txt.gz", emit: txt
+
+    shell:
+        outprefix="${pairs.simpleName}"
+        '''
+        set -o pipefail
+
+        zcat '!{pairs}' |
+            4dn_pairs_to_txt |
+            pigz -9 -p '!{task.cpus}' > '!{outprefix}.txt.gz'
+        '''
 }
 
 process pairs_to_hic8 {
@@ -47,7 +70,7 @@ process pairs_to_hic8 {
     input:
         path chrom_sizes
         path pairs
-        value resolutions
+        val resolutions
 
     output:
         path "*.hic8", emit: hic
@@ -77,7 +100,7 @@ process pairs_to_hic9 {
     input:
         path chrom_sizes
         path pairs
-        value resolutions
+        val resolutions
 
     output:
         path "*.hic8", emit: hic
@@ -123,7 +146,7 @@ process pairs_to_cool {
             --chrom2 4 \\
             --pos1 3 \\
             --pos2 5 \\
-            '!{chrom_size}:!{resolution}' \\
+            '!{chrom_sizes}:!{resolution}' \\
             - \\
             '!{dest}'
         '''
