@@ -1,0 +1,4 @@
+url	sha256	dest	action
+https://www.encodeproject.org/files/ENCFF301CUL/@@download/ENCFF301CUL.bedpe.gz	c819982ead532f010d2bf737a3b19bf2f308b8cb83e6a2c192a36b6c27cb28a8	input/domains/ENCFF301CUL.bedpe.gz	none
+https://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/p14/hg38.p14.chrom.sizes	33c11f8b76812ebb6504257f4dc51b4358230a6bb52b88048fa172aceb3d91fb	input/hg38/hg38.chrom.sizes	none
+https://www.encodeproject.org/files/ENCFF447ERX/@@download/ENCFF447ERX.pairs.gz	f06dd44e6eed46eef30e0172c7f08a5c60dc32c87aa63b2c9d41c43eb2858483	input/pairs/ENCFF447ERX.pairs.gz	none
