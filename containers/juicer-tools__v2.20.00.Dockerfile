@@ -69,9 +69,9 @@ RUN java -jar "$JUICERTOOLS_JAR"
 RUN which 4dn_pairs_to_txt
 
 LABEL org.opencontainers.image.authors='Roberto Rossini <roberros@uio.no>'
-LABEL org.opencontainers.image.url='https://github.com/paulsengroup/2023-hic2cool-ng-paper-benchmarks'
-LABEL org.opencontainers.image.documentation='https://github.com/paulsengroup/2023-hic2cool-ng-paper-benchmarks'
-LABEL org.opencontainers.image.source='https://github.com/paulsengroup/2023-hic2cool-ng-paper-benchmarks'
+LABEL org.opencontainers.image.url='https://github.com/paulsengroup/2023-hictk-paper'
+LABEL org.opencontainers.image.documentation='https://github.com/paulsengroup/2023-hictk-paper'
+LABEL org.opencontainers.image.source='https://github.com/paulsengroup/2023-hictk-paper'
 LABEL org.opencontainers.image.licenses='MIT'
 LABEL org.opencontainers.image.title="${CONTAINER_TITLE:-juicer-tools}"
 LABEL org.opencontainers.image.version="${CONTAINER_VERSION:-latest}"

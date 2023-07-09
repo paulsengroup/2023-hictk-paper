@@ -24,7 +24,7 @@ on:
 jobs:
   build-juicer-tools-dockerfile:
     name: Build juicer-tools Dockerfile
-    uses: paulsengroup/2023-hic2cool-ng-paper-benchmarks/.github/workflows/build-dockerfile.yml@main
+    uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
       dockerfile-glob: "containers/juicer-tools*.Dockerfile"
 
