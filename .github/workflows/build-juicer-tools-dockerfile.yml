@@ -1,0 +1,33 @@
+# Copyright (c) 2023 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build juicer-tools Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-juicer-tools*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/juicer-tools*.Dockerfile"
+      - "utils/4dn_pairs_to_txt/**"
+      - "utils/CMakeLists.txt"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-juicer-tools*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/juicer-tools*.Dockerfile"
+      - "utils/4dn_pairs_to_txt/**"
+      - "utils/CMakeLists.txt"
+
+jobs:
+  build-juicer-tools-dockerfile:
+    name: Build juicer-tools Dockerfile
+    uses: paulsengroup/2023-hic2cool-ng-paper-benchmarks/.github/workflows/build-dockerfile.yml@main
+    with:
+      dockerfile-glob: "containers/juicer-tools*.Dockerfile"
+
+    permissions:
+      contents: read
+      packages: write

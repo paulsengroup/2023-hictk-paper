@@ -1,0 +1,29 @@
+# Copyright (c) 2023 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build cooler Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-cooler*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/cooler*.Dockerfile"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-cooler*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/cooler*.Dockerfile"
+
+jobs:
+  build-cooler-dockerfile:
+    name: Build cooler Dockerfile
+    uses: paulsengroup/2023-hic2cool-ng-paper-benchmarks/.github/workflows/build-dockerfile.yml@main
+    with:
+      dockerfile-glob: "containers/cooler*.Dockerfile"
+
+    permissions:
+      contents: read
+      packages: write
