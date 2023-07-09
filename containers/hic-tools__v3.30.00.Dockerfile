@@ -24,7 +24,7 @@ RUN conan install /tmp/utils/conanfile.txt               \
 
 
 
-FROM curlimages/curl:8.1.0 AS downloader
+FROM curlimages/curl:8.1.2 AS downloader
 
 ARG CONTAINER_VERSION
 ARG HICTOOLS_VER=${CONTAINER_VERSION}
