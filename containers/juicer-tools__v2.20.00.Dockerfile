@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 
-FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-15:20230602 as builder
+FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-15:20230707 as builder
 
 COPY utils /tmp/utils
 
