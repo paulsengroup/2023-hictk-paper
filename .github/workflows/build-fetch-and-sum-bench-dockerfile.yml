@@ -10,8 +10,8 @@ on:
       - ".github/workflows/build-fetch-and-sum-bench*dockerfile.yml"
       - ".github/workflows/build-dockerfile.yml"
       - "containers/fetch_and_sum_bench*.Dockerfile"
-      - "utils/benchmarks/**"
-      - "utils/CMakeLists.txt"
+      - "benchmarks/**"
+      - "utils/**"
       - "CMakeLists.txt"
       - "conanfile.txt"
   pull_request:
@@ -20,8 +20,8 @@ on:
       - ".github/workflows/build-fetch-and-sum-bench*dockerfile.yml"
       - ".github/workflows/build-dockerfile.yml"
       - "containers/fetch_and_sum_bench*.Dockerfile"
-      - "utils/benchmarks/**"
-      - "utils/CMakeLists.txt"
+      - "benchmarks/**"
+      - "utils/**"
       - "CMakeLists.txt"
       - "conanfile.txt"
 
