@@ -53,7 +53,9 @@ process prepare_pairs_for_juicer {
         '''
         set -o pipefail
 
+        # grep header lines as well as pairs referring to std chromosomes
         zcat '!{pairs}' |
+            grep -P '#|chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
             4dn_pairs_to_txt |
             pigz -9 -p '!{task.cpus}' > '!{outprefix}.txt.gz'
         '''
@@ -140,6 +142,7 @@ process pairs_to_cool {
         dest="${pairs.baseName}.cool"
         '''
         zcat '!{pairs}' |
+        grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
         cooler cload pairs \\
             --assembly '!{assembly}' \\
             --chrom1 2 \\
