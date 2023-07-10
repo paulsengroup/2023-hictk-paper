@@ -11,10 +11,11 @@ include(FetchContent)
 
 FetchContent_Declare(
         hictk
-        URL ${CMAKE_CURRENT_SOURCE_DIR}/external/hictk-aa298d9.tar.xz
-        URL_HASH SHA256=192d28d986b42b12947c56f9f1f644cbab58f7f825ac1de2e6d9122c7bcaf838
+        GIT_REPOSITORY https://github.com/paulsengroup/hictk.git
+        GIT_TAG 7d216009c96c94a4744bafffbcd438946789d06b
         EXCLUDE_FROM_ALL SYSTEM)
 
+set(HICTK_ENABLE_GIT_VERSION_TRACKING OFF)
 set(HICTK_BUILD_TOOLS OFF)
 set(HICTK_ENABLE_TESTING OFF)
 FetchContent_MakeAvailable(hictk)

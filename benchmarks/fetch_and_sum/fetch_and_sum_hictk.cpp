@@ -61,6 +61,7 @@ void fetch_and_sum(const Config &c, cooler::File &&clr) {
 }
 
 void fetch_and_sum(const Config &c, hic::HiCFile &&hf) {
+  hf.optimize_cache_size_for_random_access();
   const auto norm = hic::ParseNormStr(c.weights);
 
   std::string line;
@@ -90,7 +91,10 @@ int main(int argc, char **argv) noexcept {
   try {
     cli = std::make_unique<Cli>(argc, argv);
     const auto config = cli->parse_arguments();
-    fetch_and_sum(config);
+    if (!config.path.empty()) {
+      fetch_and_sum(config);
+    }
+
   } catch (const CLI::ParseError &e) {
     assert(cli);
     return cli->exit(e);  //  This takes care of formatting and printing error
