@@ -10,12 +10,6 @@ project(2023-hictk-paper)
 include(FetchContent)
 
 FetchContent_Declare(
-        CLI11
-        URL ${CMAKE_CURRENT_SOURCE_DIR}/external/cli11-v2.3.2.tar.xz
-        URL_HASH SHA256=009b7e7a29a4c1768760df470f288e79d746532e5f666776edafb52f18960685
-        EXCLUDE_FROM_ALL SYSTEM)
-
-FetchContent_Declare(
         hictk
         URL ${CMAKE_CURRENT_SOURCE_DIR}/external/hictk-aa298d9.tar.xz
         URL_HASH SHA256=192d28d986b42b12947c56f9f1f644cbab58f7f825ac1de2e6d9122c7bcaf838
@@ -23,7 +17,7 @@ FetchContent_Declare(
 
 set(HICTK_BUILD_TOOLS OFF)
 set(HICTK_ENABLE_TESTING OFF)
-FetchContent_MakeAvailable(CLI11 hictk)
+FetchContent_MakeAvailable(hictk)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -52,5 +46,12 @@ target_compile_options(
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
 
-add_subdirectory(benchmarks)
-add_subdirectory(utils)
+option(BUILD_BENCHMARKS ON)
+option(BUILD_UTILS ON)
+if (BUILD_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif()
+
+if (BUILD_UTILS)
+    add_subdirectory(utils)
+endif ()

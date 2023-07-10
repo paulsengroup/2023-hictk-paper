@@ -1,0 +1,13 @@
+# Copyright (C) 2023 Roberto Rossini <roberros@uio.no>
+#
+# SPDX-License-Identifier: MIT
+
+[requires]
+cli11/2.3.2#8ccdf14fb1ad53532d498c16ae580b4b
+fmt/10.0.0#dd5e3eb81b512a1bb34a5aab88a07e82
+hdf5/1.14.1#16047e4faf70ba5488d7525063c5cb2b
+
+[generators]
+CMakeDeps
+
+[options]

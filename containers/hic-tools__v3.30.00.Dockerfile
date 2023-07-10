@@ -17,6 +17,8 @@ RUN conan install /tmp/utils/conanfile.txt               \
 && cmake -DCMAKE_BUILD_TYPE=Release \
          -DCMAKE_INSTALL_PREFIX=/tmp/staging \
          -DCMAKE_PREFIX_PATH=/tmp/build/ \
+         -DBUILD_BENCHMARKS=OFF \
+         -DBUILD_UTILS=ON \
          -S /tmp/utils/ \
          -B /tmp/build \
 && cmake --build /tmp/build -t 4dn_pairs_to_txt -j $(nproc) \

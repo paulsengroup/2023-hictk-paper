@@ -6,6 +6,11 @@
 **
 
 # Allowed directories
+!benchmarks/
+!cmake/
+!external/
 !utils/
 
 # Allowed files
+!CMakeLists.txt
+!conanfile.txt
