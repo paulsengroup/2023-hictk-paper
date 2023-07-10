@@ -27,7 +27,7 @@ def make_cli():
 def fetch_and_sum_hic(
     selector: hicstraw.MatrixZoomData, start1: int, end1: int, start2: int, end2: int
 ) -> float:
-    return selector.getRecordsAsMatrix(start1, end1, start2, end2).sum()
+    return sum((r.counts for r in selector.getRecords(start1, end1, start2, end2)))
 
 
 def benchmark_hic(args):
