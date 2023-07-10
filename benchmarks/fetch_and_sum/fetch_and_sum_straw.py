@@ -33,6 +33,7 @@ def fetch_and_sum_hic(
 def benchmark_hic(args):
     hf = hicstraw.HiCFile(args["uri"])
 
+    print("chrom1\tstart1\tend1\tchrom2\tstart2\tend2\tsum\ttime")
     mzd = {}
     for line in sys.stdin:
         chrom1, start1, end1, chrom2, start2, end2 = line.split("\t")[:6]

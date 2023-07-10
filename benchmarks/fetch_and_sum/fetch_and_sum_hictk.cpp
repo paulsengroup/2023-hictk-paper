@@ -79,6 +79,7 @@ void fetch_and_sum(const Config &c, hic::HiCFile &&hf) {
 }
 
 void fetch_and_sum(const benchmarks::Config &c) {
+  fmt::print(FMT_STRING("chrom1\tstart1\tend1\tchrom2\tstart2\tend2\tsum\ttime\n"));
   if (hic::utils::is_hic_file(c.path)) {
     fetch_and_sum(c, hic::HiCFile(c.path, c.resolution));
   }

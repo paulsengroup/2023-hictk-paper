@@ -37,6 +37,7 @@ def benchmark_cooler(args):
     clr = cooler.Cooler(args["uri"])
     sel = clr.matrix(balance=False, as_pixels=True)
 
+    print("chrom1\tstart1\tend1\tchrom2\tstart2\tend2\tsum\ttime")
     for line in sys.stdin:
         range1, range2 = bedpe_to_ucsc(line)
 
