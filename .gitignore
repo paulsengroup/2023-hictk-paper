@@ -2,21 +2,19 @@
 #
 # SPDX-License-Identifier: MIT
 
-# Ignored directories
-.cache/
 .idea/
-.run/
+.nextflow*/
 .vscode/
-build/
-cmake-build*/
-conan-envs/
-containers/cache
-venv
+bin/scratch/
+cmake-build-*/
+containers/cache/
+data/
 scratch/
-test/data
+venv/
+work/
 
-# Ignored files
-gmon.out
-perf.*
-compile_commands.json
-CMakeUserPresets.json
+*.bak*
+.RData
+.nextflow.log*
+stage_data*.sh
+sync.sh

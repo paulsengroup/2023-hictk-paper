@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import argparse
-import random
+import functools
 import sys
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -28,6 +29,40 @@ def make_cli():
     return cli
 
 
+@functools.cache
+def chrom_ranks() -> Dict[str, int]:
+    chroms = tuple(
+        [
+            "chr1",
+            "chr2",
+            "chr3",
+            "chr4",
+            "chr5",
+            "chr6",
+            "chr7",
+            "chrX",
+            "chr8",
+            "chr9",
+            "chr11",
+            "chr10",
+            "chr12",
+            "chr13",
+            "chr14",
+            "chr15",
+            "chr16",
+            "chr17",
+            "chr18",
+            "chr20",
+            "chr19",
+            "chrY",
+            "chr22",
+            "chr21",
+        ]
+    )
+
+    return {c: i for i, c in enumerate(chroms)}
+
+
 def generate_cis(df: pd.DataFrame, num_queries: int, seed: int) -> pd.DataFrame:
     df1 = pd.concat([df, df], axis="columns")
     df1.columns = ["chrom1", "start1", "end1", "chrom2", "start2", "end2"]
@@ -36,6 +71,8 @@ def generate_cis(df: pd.DataFrame, num_queries: int, seed: int) -> pd.DataFrame:
 
 
 def generate_trans(df: pd.DataFrame, num_queries: int, seed: int) -> pd.DataFrame:
+    df = df.copy()
+
     df_out = pd.DataFrame()
 
     prng = np.random.PCG64(seed)
@@ -60,7 +97,12 @@ def generate_trans(df: pd.DataFrame, num_queries: int, seed: int) -> pd.DataFram
 
         df3 = pd.concat([df1, df2], axis="columns")
         df3.columns = ["chrom1", "start1", "end1", "chrom2", "start2", "end2"]
-        df3 = df3[df3["chrom1"] != df3["chrom2"]]
+        df3["rank1"] = df3["chrom1"].map(lambda chrom: chrom_ranks().get(chrom))
+        df3["rank2"] = df3["chrom2"].map(lambda chrom: chrom_ranks().get(chrom))
+
+        df3 = df3.dropna()
+
+        df3 = df3[df3["rank1"] < df3["rank2"]]
 
         if len(df_out) == 0:
             df_out = df3.drop_duplicates()
@@ -68,7 +110,7 @@ def generate_trans(df: pd.DataFrame, num_queries: int, seed: int) -> pd.DataFram
 
         df_out = pd.concat([df_out, df3]).drop_duplicates()
 
-    return df_out.sample(num_queries, replace=False, random_state=prng.jumped())
+    return df_out.sample(num_queries, replace=False, random_state=prng.jumped()).drop(columns=["rank1", "rank2"])
 
 
 def main():
