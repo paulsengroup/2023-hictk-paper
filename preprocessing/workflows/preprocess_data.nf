@@ -105,11 +105,11 @@ process pairs_to_hic9 {
         val resolutions
 
     output:
-        path "*.hic8", emit: hic
+        path "*.hic9", emit: hic
 
     shell:
         memory_gb=task.memory.toGiga()
-        dest="${pairs.baseName}.hic8"
+        dest="${pairs.baseName}.hic9"
         '''
         java -Xmx!{memory_gb}G -Xms!{memory_gb}G -jar "$HICTOOLS_JAR" \\
             pre '!{pairs}'             \\
@@ -158,10 +158,10 @@ process pairs_to_cool {
 process cooler_zoomify {
     publishDir params.data_dir, mode: 'copy'
 
-    label 'process_medium'
+    label 'process_high'
     label 'process_very_long'
 
-    tag "${pairs.simpleName}"
+    tag "${cool.simpleName}"
 
     input:
         path cool
@@ -175,6 +175,7 @@ process cooler_zoomify {
         balance_args=(
             -p !{task.cpus}
             --max-iters 1000
+            --tol 0.005
         )
 
         cooler zoomify          \\
@@ -182,6 +183,6 @@ process cooler_zoomify {
             -p !{task.cpus}     \\
             -r '!{resolutions}' \\
             --balance           \\
-            --balance-args="'${balance_args[@]}'"
+            --balance-args="${balance_args[*]}"
         '''
 }
