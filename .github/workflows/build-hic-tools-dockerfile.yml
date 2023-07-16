@@ -26,7 +26,7 @@ jobs:
     name: Build hic-tools Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/hic-tools*.Dockerfile"
+      dockerfile-glob: "containers/hic-tools__*.Dockerfile"
 
     permissions:
       contents: read

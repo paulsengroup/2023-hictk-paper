@@ -22,7 +22,7 @@ jobs:
     name: Build hictk-bench Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/hictk-bench*.Dockerfile"
+      dockerfile-glob: "containers/hictk-bench__*.Dockerfile"
 
     permissions:
       contents: read

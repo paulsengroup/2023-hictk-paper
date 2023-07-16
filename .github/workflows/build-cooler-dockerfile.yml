@@ -22,7 +22,7 @@ jobs:
     name: Build cooler Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/cooler*.Dockerfile"
+      dockerfile-glob: "containers/cooler__*.Dockerfile"
 
     permissions:
       contents: read

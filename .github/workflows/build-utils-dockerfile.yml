@@ -22,7 +22,7 @@ jobs:
     name: Build utils Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/utils*.Dockerfile"
+      dockerfile-glob: "containers/utils__*.Dockerfile"
 
     permissions:
       contents: read

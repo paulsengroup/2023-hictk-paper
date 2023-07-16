@@ -30,7 +30,7 @@ jobs:
     name: Build fetch-and-sum-bench Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/fetch-and-sum-bench*.Dockerfile"
+      dockerfile-glob: "containers/fetch-and-sum-bench__*.Dockerfile"
 
     permissions:
       contents: read

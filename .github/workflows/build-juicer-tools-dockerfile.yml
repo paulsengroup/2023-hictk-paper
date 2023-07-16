@@ -26,7 +26,7 @@ jobs:
     name: Build juicer-tools Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/juicer-tools*.Dockerfile"
+      dockerfile-glob: "containers/juicer-tools__*.Dockerfile"
 
     permissions:
       contents: read
