@@ -9,7 +9,7 @@ on:
     paths:
       - ".github/workflows/build-fetch-and-sum-bench*dockerfile.yml"
       - ".github/workflows/build-dockerfile.yml"
-      - "containers/fetch_and_sum_bench*.Dockerfile"
+      - "containers/fetch-and-sum-bench*.Dockerfile"
       - "benchmarks/**"
       - "utils/**"
       - "CMakeLists.txt"
@@ -19,7 +19,7 @@ on:
     paths:
       - ".github/workflows/build-fetch-and-sum-bench*dockerfile.yml"
       - ".github/workflows/build-dockerfile.yml"
-      - "containers/fetch_and_sum_bench*.Dockerfile"
+      - "containers/fetch-and-sum-bench*.Dockerfile"
       - "benchmarks/**"
       - "utils/**"
       - "CMakeLists.txt"
@@ -30,7 +30,7 @@ jobs:
     name: Build fetch-and-sum-bench Dockerfile
     uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
     with:
-      dockerfile-glob: "containers/fetch_and_sum_bench*.Dockerfile"
+      dockerfile-glob: "containers/fetch-and-sum-bench*.Dockerfile"
 
     permissions:
       contents: read

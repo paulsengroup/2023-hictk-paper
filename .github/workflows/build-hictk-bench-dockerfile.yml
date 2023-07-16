@@ -1,0 +1,29 @@
+# Copyright (c) 2023 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build hictk-bench Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-hictk-bench*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/hictk-bench*.Dockerfile"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-hictk-bench*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/hictk-bench*.Dockerfile"
+
+jobs:
+  build-hictk-bench-dockerfile:
+    name: Build hictk-bench Dockerfile
+    uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
+    with:
+      dockerfile-glob: "containers/hictk-bench*.Dockerfile"
+
+    permissions:
+      contents: read
+      packages: write

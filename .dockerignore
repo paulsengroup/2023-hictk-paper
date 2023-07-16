@@ -6,12 +6,13 @@
 **
 
 # Allowed directories
-!benchmarks/
+!benchmarks/fetch_and_sum
 !cmake/
+!containers/
 !external/
 !utils/
 
 # Allowed files
 !CMakeLists.txt
 !conanfile.txt
-!benchmarks/fetch_and_sum/fetch_and_sum*.py
+!benchmarks/CMakeLists.txt

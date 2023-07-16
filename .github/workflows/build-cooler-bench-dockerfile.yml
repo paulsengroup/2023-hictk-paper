@@ -1,0 +1,29 @@
+# Copyright (c) 2023 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build cooler-bench Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-cooler-bench*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/cooler-bench*.Dockerfile"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-cooler-bench*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/cooler-bench*.Dockerfile"
+
+jobs:
+  build-cooler-bench-dockerfile:
+    name: Build cooler-bench Dockerfile
+    uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
+    with:
+      dockerfile-glob: "containers/cooler-bench*.Dockerfile"
+
+    permissions:
+      contents: read
+      packages: write
