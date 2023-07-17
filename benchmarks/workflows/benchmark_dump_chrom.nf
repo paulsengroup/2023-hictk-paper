@@ -195,8 +195,10 @@ process straw_sorted_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'straw\\thic\\t!{resolution}\\t' >> '!{outname}'
 
+        mkdir tmp/
+
         command time -f '%e\\t%M' \\
-            sh -c "straw observed NONE '!{hic}' '!{chromosome}' '!{chromosome}' BP '!{resolution}' | sort -k1,1n -k2,2n" \\
+            sh -c "straw observed NONE '!{hic}' '!{chromosome}' '!{chromosome}' BP '!{resolution}' | sort -k1,1n -k2,2n -T tmp/" \\
                 1> /dev/null \\
                 2>> '!{outname}'
         '''
