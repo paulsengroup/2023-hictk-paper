@@ -30,6 +30,14 @@ workflow {
     cooler_dump(
         cool_tasks
     )
+
+    summarize(
+        hictk_cooler_dump.out.tsv
+            .mix(hictk_hic_dump.out.tsv)
+            .mix(cooler_dump.out.tsv)
+            .map { it[5] }
+            .collect()
+    )
 }
 
 
@@ -71,7 +79,6 @@ process hictk_hic_dump {
     publishDir "${params.outdir}/hictk/hic", mode: 'copy'
 
     cpus 1
-    memory 12.GB
 
     tag "${hic.fileName}_${resolution}_${id}"
 
@@ -105,6 +112,8 @@ process hictk_hic_dump {
 process cooler_dump {
     publishDir "${params.outdir}/cooler/cooler", mode: 'copy'
 
+    label 'process_long'
+
     cpus 1
 
     tag "${mcool.fileName}_${resolution}_${id}"
@@ -133,5 +142,21 @@ process cooler_dump {
             cooler dump '!{mcool}::/resolutions/!{resolution}' \\
                 1> /dev/null \\
                 2>> '!{outname}'
+        '''
+}
+
+process summarize {
+    publishDir "${params.outdir}/", mode: 'copy'
+
+    input:
+        path tsvs
+
+    output:
+        path "*.tsv", emit: tsv
+
+    shell:
+        outname="report.tsv"
+        '''
+        summarize_benchmarks.py *.tsv > '!{outname}'
         '''
 }
