@@ -1,0 +1,29 @@
+# Copyright (c) 2023 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build hic2cool Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-hic2cool*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/hic2cool*.Dockerfile"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-hic2cool*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/hic2cool*.Dockerfile"
+
+jobs:
+  build-hic2cool-dockerfile:
+    name: Build hic2cool Dockerfile
+    uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
+    with:
+      dockerfile-glob: "containers/hic2cool__*.Dockerfile"
+
+    permissions:
+      contents: read
+      packages: write
