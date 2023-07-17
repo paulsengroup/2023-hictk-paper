@@ -87,7 +87,8 @@ process pairs_to_hic8 {
                 '!{chrom_sizes}'       \\
                 -j !{task.cpus}        \\
                 --threads !{task.cpus} \\
-                -r '!{resolutions}'
+                -r '!{resolutions}'    \\
+                -k VC
         '''
 }
 
