@@ -33,8 +33,8 @@ ARG JUICERTOOLS_VER=${CONTAINER_VERSION}
 RUN if [ -z "$CONTAINER_VERSION" ]; then echo "Missing CONTAINER_VERSION --build-arg" && exit 1; fi
 
 
-ARG JUICERTOOLS_URL="https://github.com/aidenlab/Juicebox/releases/download/v${JUICERTOOLS_VER}/juicer_tools.${JUICERTOOLS_VER}.jar"
-ARG JUICERTOOLS_SHA256='5de743337191a1b6b5bbc41daae4599766d4bf7073410ca2e1aa29376b306545'
+ARG JUICERTOOLS_URL="https://s3.amazonaws.com/hicfiles.tc4ga.com/public/juicer/juicer_tools_${JUICERTOOLS_VER}.jar"
+ARG JUICERTOOLS_SHA256='5bd863e1fbc4573de09469e0adc5ab586e2b75b14dd718465e14dc299d7243a0'
 
 RUN cd /tmp \
 && curl -LO "$JUICERTOOLS_URL" \
