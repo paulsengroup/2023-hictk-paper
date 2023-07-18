@@ -19,6 +19,7 @@ RUN micromamba install -y \
                numpy \
                pandas \
                papermill \
+               procps-ng \
                seaborn \
 && micromamba clean --all -y
 
