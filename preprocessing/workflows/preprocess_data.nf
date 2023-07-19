@@ -88,7 +88,7 @@ process pairs_to_hic8 {
                 -j !{task.cpus}        \\
                 --threads !{task.cpus} \\
                 -r '!{resolutions}'    \\
-                -k VC
+                -n
         '''
 }
 
