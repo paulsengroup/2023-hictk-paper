@@ -1,0 +1,26 @@
+diff --git a/C++/main.cpp b/C++/main.cpp
+index 6a8061e..d192be5 100644
+--- a/C++/main.cpp
++++ b/C++/main.cpp
+@@ -21,6 +21,7 @@
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+ */
++#include <algorithm>
+ #include <iostream>
+ #include <string>
+ #include "straw.h"
+@@ -48,6 +49,13 @@ int main(int argc, char *argv[])
+     int32_t binsize = stoi(size);
+     vector<contactRecord> records;
+     records = straw(matrixType, norm, fname, chr1loc, chr2loc, unit, binsize);
++    std::sort(records.begin(), records.end(),
++              [&](const contactRecord &r1, const contactRecord &r2) {
++                if (r1.binY == r2.binY) {
++                  return r1.binX < r2.binX;
++                }
++                return r1.binY < r2.binY;
++              });
+     size_t length = records.size();
+     for (int i = 0; i < length; i++) {
+         printf("%d\t%d\t%.14g\n", records[i].binX, records[i].binY, records[i].counts);

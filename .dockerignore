@@ -8,11 +8,12 @@
 # Allowed directories
 !benchmarks/fetch_and_sum
 !cmake/
-!containers/
+!containers/patches/**
 !external/
 !utils/
 
 # Allowed files
+!containers/*.Dockerfile
 !CMakeLists.txt
 !conanfile.txt
 !benchmarks/CMakeLists.txt
