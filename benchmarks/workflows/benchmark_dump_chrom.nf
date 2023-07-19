@@ -188,17 +188,15 @@ process straw_sorted_dump {
               path("*.tsv"), emit: tsv
 
     shell:
-        outname="${id}__${hic.simpleName}__straw__hic__${resolution}.tsv"
+        outname="${id}__${hic.simpleName}__straw_sorted__hic__${resolution}.tsv"
         '''
         set -o pipefail
 
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
-        printf 'straw\\thic\\t!{resolution}\\t' >> '!{outname}'
-
-        mkdir tmp/
+        printf 'straw_sorted\\thic\\t!{resolution}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M' \\
-            sh -c "straw observed NONE '!{hic}' '!{chromosome}' '!{chromosome}' BP '!{resolution}' | sort -k1,1n -k2,2n -T tmp/" \\
+            straw-sorted observed NONE '!{hic}' '!{chromosome}' '!{chromosome}' BP '!{resolution}' \\
                 1> /dev/null \\
                 2>> '!{outname}'
         '''
