@@ -55,6 +55,7 @@ process hictk_cooler_dump {
     publishDir "${params.outdir}/hictk/cooler", mode: 'copy'
 
     cpus 1
+    memory 16.GB
 
     tag "${mcool.fileName}_${resolution}_${id}"
 
@@ -92,6 +93,7 @@ process hictk_hic_dump {
     publishDir "${params.outdir}/hictk/hic", mode: 'copy'
 
     cpus 1
+    memory 16.GB
 
     tag "${hic.fileName}_${resolution}_${id}"
 
@@ -131,6 +133,7 @@ process cooler_dump {
     label 'process_long'
 
     cpus 1
+    memory 16.GB
 
     tag "${mcool.fileName}_${resolution}_${id}"
 
@@ -170,6 +173,7 @@ process straw_sorted_dump {
     label 'process_long'
 
     cpus 1
+    memory 16.GB
 
     tag "${hic.fileName}_${resolution}_${id}"
 
@@ -208,6 +212,7 @@ process straw_dump {
     label 'process_long'
 
     cpus 1
+    memory 16.GB
 
     tag "${hic.fileName}_${resolution}_${id}"
 
