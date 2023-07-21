@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM curlimages/curl:8.1.2 AS downloader
+FROM curlimages/curl:8.2.0 AS downloader
 
 ARG CONTAINER_VERSION
 ARG HICTOOLS_VER=3.30.00
