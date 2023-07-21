@@ -116,7 +116,10 @@ process hictk_convert9 {
 process hic2cool {
     publishDir "${params.outdir}/hi2cool/hic8", mode: 'copy'
 
+    label 'process_very_long'
+
     cpus 2
+    memory 32.GB
 
     tag "${hic.fileName}_${resolution}_v8_${id}"
 
