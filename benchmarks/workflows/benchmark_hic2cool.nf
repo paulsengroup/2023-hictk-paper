@@ -71,6 +71,7 @@ process hictk_convert8 {
         command time -f '%e\\t%M'             \\
             hictk convert '!{hic}'            \\
                 'out.cool'                    \\
+                --verbosity=1                 \\
                 --resolutions '!{resolution}' \\
                 1> /dev/null                  \\
                 2>> '!{outname}'
@@ -107,6 +108,7 @@ process hictk_convert9 {
         command time -f '%e\\t%M'             \\
             hictk convert '!{hic}'            \\
                 'out.cool'                    \\
+                --verbosity=1                 \\
                 --resolutions '!{resolution}' \\
                 1> /dev/null                  \\
                 2>> '!{outname}'
@@ -144,11 +146,13 @@ process hic2cool {
         printf 'hic2cool\\thic8\\t!{resolution}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'             \\
-            hic2cool '!{hic}'                 \\
+            hic2cool convert                  \\
+                '!{hic}'                      \\
                 'out.cool'                    \\
                 --resolution '!{resolution}'  \\
-                -p '!{task.cpus}'             \\
-                1> /dev/null                  \\
+                -s                            \\
+                -p '!{task.cpus}'             |&
+                grep -vF '###'  \\
                 2>> '!{outname}'
         '''
 }
