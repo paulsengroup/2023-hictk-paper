@@ -154,7 +154,7 @@ process hic2cool {
                 -p '!{task.cpus}'             |&
                 grep -vF '###'                |&
                 grep -vF 'WARNING'            \\
-                #2>> '!{outname}'
+                2>> '!{outname}'
         '''
 }
 
