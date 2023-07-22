@@ -14,6 +14,7 @@ RUN if [ -z "$CONTAINER_VERSION" ]; then echo "Missing CONTAINER_VERSION --build
 RUN micromamba install -y \
                -c conda-forge \
                time \
+               zstd \
 && micromamba clean --all -y
 
 WORKDIR /data

@@ -37,6 +37,7 @@ RUN apt-get update \
       pigz \
       procps \
       time \
+      zstd \
 && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /data
