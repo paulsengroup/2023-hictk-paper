@@ -152,8 +152,9 @@ process hic2cool {
                 --resolution '!{resolution}'  \\
                 -s                            \\
                 -p '!{task.cpus}'             |&
-                grep -vF '###'  \\
-                2>> '!{outname}'
+                grep -vF '###'                |&
+                grep -vF 'WARNING'            \\
+                #2>> '!{outname}'
         '''
 }
 
