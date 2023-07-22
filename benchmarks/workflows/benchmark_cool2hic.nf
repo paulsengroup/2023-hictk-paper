@@ -46,14 +46,17 @@ process hictk_convert {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk\\tcooler\\tall\\t' >> '!{outname}'
 
-        cmd=(hictk convert '!{mcool}'
-                             out.hic
-                             --tmpdir tmp/
-                             --juicer-tools-jar "$HICTOOLS_JAR"
-                             -p '!{task.cpus}')
+
         mkdir tmp/
-        command time -f '%e\\t%M' sh -c "${cmd[*]} 2>&1" \\
-                2>> '!{outname}'
+        command time -f '%e\\t%M'                            \\
+            hictk convert '!{mcool}'                         \\
+                          out.hic                            \\
+                          --tmpdir tmp/                      \\
+                          --juicer-tools-jar "$HICTOOLS_JAR" \\
+                          -p '!{task.cpus}'                  \\
+                          --verbosity=1                      \\
+                    1> /dev/null                             \\
+                    2>> '!{outname}'
         '''
 }
 
