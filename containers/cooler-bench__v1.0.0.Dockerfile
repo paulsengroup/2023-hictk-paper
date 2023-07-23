@@ -9,7 +9,7 @@ ARG CONTAINER_VERSION
 
 RUN if [ -z "$CONTAINER_VERSION" ]; then echo "Missing CONTAINER_VERSION --build-arg" && exit 1; fi
 
-UN apt-get update \
+RUN apt-get update \
 && apt-get install -y --no-install-recommends \
     time \
     zstd \
