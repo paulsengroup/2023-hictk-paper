@@ -29,9 +29,7 @@ def main():
     files = args["tsvs"]
 
     df = pd.concat((pd.read_table(path) for path in files), axis="index")
-    df = df.groupby(["tool", "format", "resolution"]).median()
-
-    df.to_csv(sys.stdout, sep="\t")
+    df.to_csv(sys.stdout, sep="\t", index=False)
 
 
 if __name__ == "__main__":

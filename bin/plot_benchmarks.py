@@ -39,7 +39,7 @@ def plot_barplot(df: pd.DataFrame, x: str, y: str, title: str, out_prefix: pathl
     else:
         ylabel = y
 
-    sns.barplot(df, x=x, y=y, hue="tool", ax=ax)
+    sns.barplot(df, x=x, y=y, hue="tool", estimator="median", ax=ax)
     ax.set(
         title=title,
         ylabel=ylabel,

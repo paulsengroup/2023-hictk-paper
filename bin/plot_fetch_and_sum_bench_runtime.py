@@ -35,7 +35,12 @@ def plot_boxplot(df: pd.DataFrame, query_type: str, out_prefix: pathlib.Path) ->
     df["median"] *= 1000
 
     sns.boxplot(df, x="resolution", y="median", hue="tool", ax=ax)
-    ax.set(title=f"Random queries ({query_type})", ylabel="Time (ms)", xlabel="Resolution (bp)", yscale="log")
+    ax.set(
+        title=f"Random queries ({query_type})",
+        ylabel="Time (ms)",
+        xlabel="Resolution (bp)",
+        yscale="log",
+    )
 
     plt.tight_layout()
     fig.savefig(out_prefix.with_suffix(".png"), dpi=300)
@@ -75,7 +80,9 @@ def plot_ratio(df: pd.DataFrame, query_type: str, out_prefix: pathlib.Path) -> p
 
     sns.barplot(df, x="resolution", y="median", hue="tool", ax=ax)
     ax.set(
-        title=f"Random queries relative performance ({query_type})", ylabel="relative speed", xlabel="Resolution (bp)"
+        title=f"Random queries relative performance ({query_type})",
+        ylabel="relative speed",
+        xlabel="Resolution (bp)",
     )
 
     plt.tight_layout()
@@ -93,7 +100,11 @@ def main():
     df["tool"] = df["tool"] + "_" + df["format"]
 
     plot_boxplot(df, args["query_type"], pathlib.Path(str(args["output_prefix"]) + "_boxplot"))
-    plot_ratio(compute_performance_ratio(df), args["query_type"], pathlib.Path(str(args["output_prefix"]) + "_barplot"))
+    plot_ratio(
+        compute_performance_ratio(df),
+        args["query_type"],
+        pathlib.Path(str(args["output_prefix"]) + "_barplot"),
+    )
 
 
 if __name__ == "__main__":
