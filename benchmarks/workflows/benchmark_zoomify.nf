@@ -176,7 +176,7 @@ process cooler_coarsen_mt4 {
 process cooler_coarsen_mt8 {
     publishDir "${params.outdir}/cooler/", mode: 'copy'
 
-    cpus 16
+    cpus 8
     memory { 32.GB * task.attempt }
     label 'process_long'
 
