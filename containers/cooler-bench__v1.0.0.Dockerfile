@@ -5,17 +5,15 @@
 
 FROM ghcr.io/paulsengroup/2023-hictk-paper/cooler:0.9.2 AS base
 
-ARG MAMBA_DOCKERFILE_ACTIVATE=1
-
 ARG CONTAINER_VERSION
 
 RUN if [ -z "$CONTAINER_VERSION" ]; then echo "Missing CONTAINER_VERSION --build-arg" && exit 1; fi
 
-RUN micromamba install -y \
-               -c conda-forge \
-               time \
-               zstd \
-&& micromamba clean --all -y
+UN apt-get update \
+&& apt-get install -y --no-install-recommends \
+    time \
+    zstd \
+&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /data
 

@@ -2,28 +2,24 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM mambaorg/micromamba:1.4.9 AS base
+FROM ubuntu:22.04 AS base
 
-ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
 ARG CONTAINER_VERSION
 ARG COOLER_VERSION="${CONTAINER_VERSION}"
+ARG PIP_NO_CACHE_DIR=0
 
 RUN if [ -z "$CONTAINER_VERSION" ]; then echo "Missing CONTAINER_VERSION --build-arg" && exit 1; fi
 
-RUN micromamba install -y \
-               -c conda-forge \
-               -c bioconda \
-               "cooler=$COOLER_VERSION" \
-               procps-ng \
-&& micromamba clean --all -y
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    procps \
+&& pip install "cooler==$COOLER_VERSION" \
+&& apt-get remove -y python3-pip \
+&& rm -rf /var/lib/apt/lists/*
 
-ENV MKL_NUM_THREADS=1
-ENV NUMEXPR_NUM_THREADS=1
-ENV OMP_NUM_THREADS=1
-
-ENV PATH="/opt/conda/bin:$PATH"
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
 CMD ["cooler"]
 WORKDIR /data
 

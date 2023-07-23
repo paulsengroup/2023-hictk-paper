@@ -2,30 +2,29 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM mambaorg/micromamba:1.4.9 AS base
+FROM ubuntu:22.04 AS base
 
-ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
 ARG CONTAINER_VERSION
 ARG HIC2COOL_VERSION="${CONTAINER_VERSION}"
+ARG PIP_NO_CACHE_DIR=0
 
 RUN if [ -z "$CONTAINER_VERSION" ]; then echo "Missing CONTAINER_VERSION --build-arg" && exit 1; fi
 
-RUN micromamba install -y \
-               -c conda-forge \
-               -c bioconda \
-               "hic2cool=$HIC2COOL_VERSION" \
-               procps-ng \
-               time \
-&& micromamba clean --all -y
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    procps \
+    time \
+&& pip install "hic2cool==$HIC2COOL_VERSION" \
+&& apt-get remove -y python3-pip \
+&& rm -rf /var/lib/apt/lists/*
 
-
-ENV PATH="/opt/conda/bin:$PATH"
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
 CMD ["hic2cool"]
 WORKDIR /data
 
-RUN cooler --version
+RUN hic2cool --version
 
 LABEL org.opencontainers.image.authors='Roberto Rossini <roberros@uio.no>'
 LABEL org.opencontainers.image.url='https://github.com/paulsengroup/2023-hictk-paper'
