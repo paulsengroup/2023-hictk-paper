@@ -51,12 +51,15 @@ fi
 args=("${@:3}")
 if [[ "$(hostname -d)" == saga ]]; then
   base_config="configs/base_saga.config"
-  args+=(--max_memory=400.GB
-         --max_cpus=52
-         --max_time=336.h
+  args+=(--max_memory=178.GB
+         --max_cpus=40
+         --max_time=168.h
          --project="${SLURM_PROJECT_ID-changeme}")
 elif [[ $HOSTNAME == hovig*.uio.no ]]; then
   base_config="configs/base_hovig.config"
+  args+=(--max_memory=400.GB
+         --max_cpus=32
+         --max_time=336.h)
 elif [[ "$OSTYPE" == darwin* ]]; then
   base_config="configs/base_macos.config"
 else
