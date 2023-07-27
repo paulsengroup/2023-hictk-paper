@@ -120,7 +120,7 @@ process fetch_and_sum_hictk_cool {
     input:
         tuple val(id),
               path(mcool),
-              val(queries),
+              path(queries),
               val(type),
               val(resolution)
 
@@ -164,7 +164,7 @@ process fetch_and_sum_hictk_hic {
     input:
         tuple val(id),
               path(hic),
-              val(queries),
+              path(queries),
               val(type),
               val(resolution)
 
@@ -208,7 +208,7 @@ process fetch_and_sum_cooler {
     input:
         tuple val(id),
               path(mcool),
-              val(queries),
+              path(queries),
               val(type),
               val(resolution)
 
@@ -253,7 +253,7 @@ process fetch_and_sum_straw {
     input:
         tuple val(id),
               path(hic),
-              val(queries),
+              path(queries),
               val(type),
               val(resolution)
 

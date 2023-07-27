@@ -35,7 +35,7 @@ workflow {
         hictk_cooler_dump.out.tsv
             .mix(hictk_hic_dump.out.tsv)
             .mix(cooler_dump.out.tsv)
-            .map { it[5] }
+            .map { it[4] }
             .collect()
     )
 }

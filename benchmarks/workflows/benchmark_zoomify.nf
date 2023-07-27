@@ -111,6 +111,7 @@ process cooler_coarsen_st {
               path("*.tsv"), emit: tsv
 
     shell:
+        factor=resolution2.intdiv(resolution1)
         outname="${id}__${mcool.simpleName}__cooler_st__cooler__${resolution1}__${resolution2}.tsv"
         '''
         set -o pipefail
@@ -118,14 +119,12 @@ process cooler_coarsen_st {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler_st\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
-        factor=$(( !{resolution2} / !{resolution1} ))
-
         command time -f '%e\\t%M'                       \\
             cooler coarsen                              \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 -o out.cool                             \\
                 -p '!{task.cpus}'                       \\
-                -k $factor                              |&
+                -k '!{factor}'                          |&
                 grep -v 'INFO' >> '!{outname}'
         '''
 }
@@ -134,7 +133,7 @@ process cooler_coarsen_mt4 {
     publishDir "${params.outdir}/cooler/", mode: 'copy'
 
     cpus 4
-    memory { 16.GB * task.attempt }
+    memory { 36.GB * task.attempt }
     label 'process_long'
 
     tag "${mcool.fileName}_${resolution1}_${resolution2}_${id}"
@@ -154,6 +153,7 @@ process cooler_coarsen_mt4 {
               path("*.tsv"), emit: tsv
 
     shell:
+        factor=resolution2.intdiv(resolution1)
         outname="${id}__${mcool.simpleName}__cooler_mt4__cooler__${resolution1}__${resolution2}.tsv"
         '''
         set -o pipefail
@@ -161,14 +161,12 @@ process cooler_coarsen_mt4 {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler_mt4\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
-        factor=$(( !{resolution2} / !{resolution1} ))
-
         command time -f '%e\\t%M'                       \\
             cooler coarsen                              \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 -o out.cool                             \\
                 -p '!{task.cpus}'                       \\
-                -k $factor                              |&
+                -k '!{factor}'                          |&
                 grep -v 'INFO' >> '!{outname}'
         '''
 }
@@ -177,7 +175,7 @@ process cooler_coarsen_mt8 {
     publishDir "${params.outdir}/cooler/", mode: 'copy'
 
     cpus 8
-    memory { 32.GB * task.attempt }
+    memory { 48.GB * task.attempt }
     label 'process_long'
 
     tag "${mcool.fileName}_${resolution1}_${resolution2}_${id}"
@@ -197,6 +195,7 @@ process cooler_coarsen_mt8 {
               path("*.tsv"), emit: tsv
 
     shell:
+        factor=resolution2.intdiv(resolution1)
         outname="${id}__${mcool.simpleName}__cooler_mt8__cooler__${resolution1}__${resolution2}.tsv"
         '''
         set -o pipefail
@@ -204,14 +203,12 @@ process cooler_coarsen_mt8 {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler_mt8\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
-        factor=$(( !{resolution2} / !{resolution1} ))
-
         command time -f '%e\\t%M'                       \\
             cooler coarsen                              \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 -o out.cool                             \\
                 -p '!{task.cpus}'                       \\
-                -k $factor                              |&
+                -k '!{factor}'                          |&
                 grep -v 'INFO' >> '!{outname}'
         '''
 }

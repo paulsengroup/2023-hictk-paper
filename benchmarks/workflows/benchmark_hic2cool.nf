@@ -116,7 +116,7 @@ process hictk_convert9 {
 }
 
 process hic2cool {
-    publishDir "${params.outdir}/hi2cool/hic8", mode: 'copy'
+    publishDir "${params.outdir}/hic2cool/hic8", mode: 'copy'
 
     label 'process_very_long'
 
@@ -154,7 +154,7 @@ process hic2cool {
                 -p '!{task.cpus}'             |&
                 grep -vF '###'                |&
                 grep -vF 'WARNING'            \\
-                2>> '!{outname}'
+                1>> '!{outname}'
         '''
 }
 
