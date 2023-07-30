@@ -14,7 +14,7 @@ target_link_libraries(
   PRIVATE benchmarks_project_warnings benchmarks_project_options hictk::cooler hictk::hic
         CLI11::CLI11
         PUBLIC
-        fmt::fmt
+        fmt::fmt-header-only
 )
 
 target_include_directories(fetch_and_sum PRIVATE include)
