@@ -1,0 +1,29 @@
+# Copyright (c) 2023 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build possum Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-possum*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/possum*.Dockerfile"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/build-possum*dockerfile.yml"
+      - ".github/workflows/build-dockerfile.yml"
+      - "containers/possum*.Dockerfile"
+
+jobs:
+  build-possum-dockerfile:
+    name: Build possum Dockerfile
+    uses: paulsengroup/2023-hictk-paper/.github/workflows/build-dockerfile.yml@main
+    with:
+      dockerfile-glob: "containers/possum__*.Dockerfile"
+
+    permissions:
+      contents: read
+      packages: write
