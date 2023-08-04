@@ -10,23 +10,29 @@ workflow {
     Channel.fromPath(params.pairs, checkIfExists: true).set { pairs }
     def chrom_sizes = file(params.chrom_sizes, checkIfExists: true)
 
-    prepare_pairs_for_juicer(pairs)
+    process_chrom_sizes(
+        chrom_sizes
+    )
+
+    prepare_pairs_for_juicer(
+        pairs
+    )
 
     pairs_to_hic8(
-        chrom_sizes,
+        process_chrom_sizes.out.chrom_sizes,
         prepare_pairs_for_juicer.out.txt,
         params.resolutions.join(",")
     )
 
     pairs_to_hic9(
-        chrom_sizes,
+        process_chrom_sizes.out.chrom_sizes,
         prepare_pairs_for_juicer.out.txt,
         params.resolutions.join(",")
     )
 
     pairs_to_cool(
         pairs,
-        chrom_sizes,
+        process_chrom_sizes.out.chrom_sizes,
         params.resolutions.min(),
         params.assembly
     )
@@ -35,6 +41,22 @@ workflow {
         pairs_to_cool.out.cool,
         params.resolutions.join(",")
     )
+}
+
+process process_chrom_sizes {
+
+    input:
+        path chrom_sizes
+
+    output:
+        path "*.chrom.sizes", emit: chrom_sizes
+
+    shell:
+    outname="${chrom_sizes.simpleName}.filtered.chrom.sizes"
+    '''
+    grep '^chr[XY0-9]\\+[[:space:]]' '!{chrom_sizes}' |
+        sort -V > '!{outname}'
+    '''
 }
 
 process prepare_pairs_for_juicer {
@@ -79,7 +101,7 @@ process pairs_to_hic8 {
 
     shell:
         memory_gb=task.memory.toGiga()
-        dest="${pairs.baseName}.hic8"
+        dest="${pairs.simpleName}.hic8"
         '''
         java -Xmx!{memory_gb}G -Xms!{memory_gb}G -jar "$JUICERTOOLS_JAR" \\
             pre '!{pairs}'             \\
@@ -110,7 +132,7 @@ process pairs_to_hic9 {
 
     shell:
         memory_gb=task.memory.toGiga()
-        dest="${pairs.baseName}.hic9"
+        dest="${pairs.simpleName}.hic9"
         '''
         java -Xmx!{memory_gb}G -Xms!{memory_gb}G -jar "$HICTOOLS_JAR" \\
             pre '!{pairs}'             \\
@@ -140,7 +162,7 @@ process pairs_to_cool {
 
     shell:
         memory_gb=task.memory.toGiga()
-        dest="${pairs.baseName}.cool"
+        dest="${pairs.simpleName}.cool"
         '''
         zcat '!{pairs}' |
         grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
