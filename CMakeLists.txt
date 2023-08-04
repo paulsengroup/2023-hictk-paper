@@ -12,7 +12,7 @@ include(FetchContent)
 FetchContent_Declare(
         hictk
         GIT_REPOSITORY https://github.com/paulsengroup/hictk.git
-        GIT_TAG 5a27e5c4a071c3384bfc521747c0fe5c329b221f
+        GIT_TAG v0.0.1
         EXCLUDE_FROM_ALL SYSTEM)
 
 set(HICTK_ENABLE_GIT_VERSION_TRACKING OFF)
