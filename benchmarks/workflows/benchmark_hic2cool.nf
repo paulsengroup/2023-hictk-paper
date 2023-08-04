@@ -10,6 +10,9 @@ workflow {
     Channel.fromPath(params.hic9_file, checkIfExists: true).set { hic9 }
 
     Channel.of(params.resolutions).flatten().set { resolutions }
+    resolutions
+        .filter { it >= 1000 }
+        .set { resolutions_hic2cool }
 
     task_ids = Channel.of((1..params.replicates).toList()).flatten()
 
@@ -20,6 +23,10 @@ workflow {
     task_ids.combine(hic9)
         .combine(resolutions)
         .set { hic9_tasks }
+
+    task_ids.combine(hic8)
+        .combine(resolutions_hic2cool)
+        .set { hic2cool_tasks }
 
     hictk_convert8(
         hic8_tasks
