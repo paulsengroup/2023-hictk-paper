@@ -69,12 +69,11 @@ process hictk_convert8 {
         printf 'hictk\\thic8\\t!{resolution}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'             \\
+                     -o '!{outname}'          \\
+                     -a                       \\
             hictk convert '!{hic}'            \\
                 'out.cool'                    \\
-                --verbosity=1                 \\
-                --resolutions '!{resolution}' \\
-                1> /dev/null                  \\
-                2>> '!{outname}'
+                --resolutions '!{resolution}'
         '''
 }
 
@@ -106,12 +105,11 @@ process hictk_convert9 {
         printf 'hictk\\thic9\\t!{resolution}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'             \\
+                     -o '!{outname}'          \\
+                     -a                       \\
             hictk convert '!{hic}'            \\
                 'out.cool'                    \\
-                --verbosity=1                 \\
-                --resolutions '!{resolution}' \\
-                1> /dev/null                  \\
-                2>> '!{outname}'
+                --resolutions '!{resolution}'
         '''
 }
 
@@ -146,15 +144,13 @@ process hic2cool {
         printf 'hic2cool\\thic8\\t!{resolution}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'             \\
+                     -o '!{outname}'          \\
+                     -a                       \\
             hic2cool convert                  \\
                 '!{hic}'                      \\
                 'out.cool'                    \\
                 --resolution '!{resolution}'  \\
-                -s                            \\
-                -p '!{task.cpus}'             |&
-                grep -vF '###'                |&
-                grep -vF 'WARNING'            \\
-                1>> '!{outname}'
+                -p '!{task.cpus}'
         '''
 }
 

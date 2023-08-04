@@ -26,7 +26,7 @@ workflow {
 process hictk_convert {
     publishDir "${params.outdir}/hictk/", mode: 'copy'
 
-    cpus 8
+    cpus 4
 
     tag "${mcool.fileName}_${id}"
 
@@ -49,14 +49,13 @@ process hictk_convert {
 
         mkdir tmp/
         command time -f '%e\\t%M'                            \\
+                     -o '!{outname}'                         \\
+                     -a                                      \\
             hictk convert '!{mcool}'                         \\
                           out.hic                            \\
                           --tmpdir tmp/                      \\
                           --juicer-tools-jar "$HICTOOLS_JAR" \\
-                          -p '!{task.cpus}'                  \\
-                          --verbosity=1                      \\
-                    1> /dev/null                             \\
-                    2>> '!{outname}'
+                          -p '!{task.cpus}'
         '''
 }
 
