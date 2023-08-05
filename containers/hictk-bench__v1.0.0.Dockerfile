@@ -19,7 +19,7 @@ RUN cd /tmp \
 && chmod 644 *.jar *LICENSE
 
 
-FROM ghcr.io/paulsengroup/hictk:0.0.1 AS base
+FROM ghcr.io/paulsengroup/hictk:0.0.2 AS base
 
 ARG CONTAINER_VERSION
 
