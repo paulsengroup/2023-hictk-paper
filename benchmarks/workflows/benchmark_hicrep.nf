@@ -30,8 +30,7 @@ workflow {
     )
 
     summarize(
-        //hicrep_vanilla.out.tsv
-        Channel.empty()
+        hicrep_vanilla.out.tsv
             .mix(hicrep_hictk_cooler.out.tsv)
             .mix(hicrep_hictk_hic.out.tsv)
             .map { it[4] }
@@ -41,7 +40,7 @@ workflow {
 
 
 process hicrep_vanilla {
-    publishDir "${params.outdir}/hictk/hic", mode: 'copy'
+    publishDir "${params.outdir}/cooler/cooler", mode: 'copy'
 
     cpus 1
 
@@ -60,7 +59,7 @@ process hicrep_vanilla {
               path("*.tsv"), emit: tsv
 
     shell:
-        outname="${id}__${mcool.simpleName}__hictk__hic__${resolution}.tsv"
+        outname="${id}__${mcool.simpleName}__cooler__cooler__${resolution}.tsv"
         '''
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler\\tcooler\\t!{resolution}\\t' >> '!{outname}'
@@ -136,6 +135,9 @@ process hicrep_hictk_hic {
     shell:
         outname="${id}__${hic.simpleName}__hictk__hic__${resolution}.tsv"
         '''
+        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
+        printf 'hictk\\thic\\t!{resolution}\\t' >> '!{outname}'
+
         command time -f '%e\\t%M'      \\
                      -o '!{outname}'   \\
                      -a                \\
