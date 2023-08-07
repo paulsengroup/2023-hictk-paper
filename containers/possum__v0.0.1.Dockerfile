@@ -7,7 +7,7 @@ FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-15:20230707 as
 
 ARG POSSUM_GIT='https://github.com/robomics/EigenVector.git'
 ARG POSSUM_PATCHED_TAG='eba7fb5be7dc14da2f56cb2894a3f14339c43a7e'
-ARG POSSUM_HICTK_TAG='2dbe40669e4be41544ae615ca0fc6d3d015b6b32'
+ARG POSSUM_HICTK_TAG='21a6bcd9493b77cca841a7435add871262f12fd8'
 
 RUN apt-get update \
 && apt-get install -y \
