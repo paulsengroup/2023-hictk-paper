@@ -20,39 +20,11 @@ RUN /opt/hicrep/vanilla/bin/hicrep --help
 FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-15:20230707 as hicrep_hictk
 
 
-ARG HICTKPY_GIT='https://github.com/paulsengroup/hictkpy.git'
-ARG HICTKPY_TAG='eed5070ae2b74602d367929c39924ff871c66b97'
-
-RUN git clone "$HICTKPY_GIT" /tmp/hictkpy \
-&& cd /tmp/hictkpy \
-&& git checkout "$HICTKPY_TAG"
-
-RUN conan install "/tmp/hictkpy/conanfile.txt"   \
-             --build=missing                     \
-             -pr:b="$CONAN_DEFAULT_PROFILE_PATH" \
-             -pr:h="$CONAN_DEFAULT_PROFILE_PATH" \
-             -s build_type=Release               \
-             -s compiler.libcxx=libstdc++11      \
-             -s compiler.cppstd=17               \
-             --output-folder=/tmp/staging        \
-             -o '*/*:shared=True'                \
-&& conan cache clean "*" --build    \
-&& conan cache clean "*" --download \
-&& conan cache clean "*" --source
-
-RUN apt-get update \
-&& apt-get install -y --no-install-recommends \
-    python3.11-dev \
-    python3.11-venv
+ARG HICREP_GIT='https://github.com/robomics/hicrep.git'
+ARG HICREP_TAG='0055efce06e0e0335b37859076c0241ff8845ee6'
 
 RUN python3.11 -m venv /opt/hicrep/hictkpy \
-&& env CMAKE_ARGS='-DCMAKE_PREFIX_PATH=/tmp/staging' \
-   /opt/hicrep/hictkpy/bin/pip install -v /tmp/hictkpy
-
-ARG HICREP_GIT='https://github.com/robomics/hicrep.git'
-ARG HICREP_TAG='5ddf67f93b40d4e0fbd455aa70461c7b47d50bd7'
-
-RUN /opt/hicrep/hictkpy/bin/pip install "git+$HICREP_GIT@$HICREP_TAG"
+&& /opt/hicrep/hictkpy/bin/pip install "git+$HICREP_GIT@$HICREP_TAG"
 
 RUN /opt/hicrep/hictkpy/bin/hicrep --help
 
