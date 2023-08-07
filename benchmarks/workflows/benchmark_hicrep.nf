@@ -41,7 +41,7 @@ workflow {
 
 
 process hicrep_vanilla {
-    publishDir "${params.outdir}/straw/hic", mode: 'copy'
+    publishDir "${params.outdir}/hictk/hic", mode: 'copy'
 
     cpus 1
 
@@ -60,7 +60,7 @@ process hicrep_vanilla {
               path("*.tsv"), emit: tsv
 
     shell:
-        outname="${id}__${mcool.simpleName}__straw__hic__${resolution}.tsv"
+        outname="${id}__${mcool.simpleName}__hictk__hic__${resolution}.tsv"
         '''
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler\\tcooler\\t!{resolution}\\t' >> '!{outname}'
