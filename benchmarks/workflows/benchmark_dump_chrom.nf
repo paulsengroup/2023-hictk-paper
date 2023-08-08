@@ -81,11 +81,12 @@ process hictk_cooler_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk\\tcooler\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
+        command time -f '%e\\t%M'                                       \\
+                     -o '!{outname}'                                    \\
+                     -a                                                 \\
             hictk dump '!{mcool}::/resolutions/!{resolution}' --no-join \\
-                --range '!{chromosome}' \\
-                1> /dev/null \\
-                2>> '!{outname}'
+                --range '!{chromosome}'                                 \\
+                1> /dev/null
         '''
 }
 
@@ -119,11 +120,12 @@ process hictk_hic_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk\\thic\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
-            hictk dump '!{hic}' --resolution '!{resolution}' --no-join \\
-                --range '!{chromosome}' \\
-                1> /dev/null \\
-                2>> '!{outname}'
+        command time -f '%e\\t%M'                                       \\
+                     -o '!{outname}'                                    \\
+                     -a                                                 \\
+            hictk dump '!{hic}' --resolution '!{resolution}' --no-join  \\
+                --range '!{chromosome}'                                 \\
+                1> /dev/null
         '''
 }
 
@@ -159,11 +161,12 @@ process cooler_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler\\tcooler\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
+        command time -f '%e\\t%M'                              \\
+                     -o '!{outname}'                           \\
+                     -a                                        \\
             cooler dump '!{mcool}::/resolutions/!{resolution}' \\
-                --range '!{chromosome}' \\
-                1> /dev/null \\
-                2>> '!{outname}'
+                --range '!{chromosome}'                        \\
+                1> /dev/null
         '''
 }
 
@@ -199,10 +202,13 @@ process straw_sorted_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'straw_sorted\\thic\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
-            straw-sorted observed NONE '!{hic}' '!{chromosome}' '!{chromosome}' BP '!{resolution}' \\
-                1> /dev/null \\
-                2>> '!{outname}'
+        command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
+            straw-sorted observed NONE '!{hic}'         \\
+                        '!{chromosome}' '!{chromosome}' \\
+                         BP '!{resolution}'             \\
+                1> /dev/null
         '''
 }
 
@@ -238,10 +244,13 @@ process straw_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'straw\\thic\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
-            straw observed NONE '!{hic}' '!{chromosome}' '!{chromosome}' BP '!{resolution}' \\
-                1> /dev/null \\
-                2>> '!{outname}'
+        command time -f '%e\\t%M'                         \\
+                     -o '!{outname}'                      \\
+                     -a                                   \\
+            straw observed NONE '!{hic}'                  \\
+                          '!{chromosome}' '!{chromosome}' \\
+                           BP '!{resolution}'             \\
+                1> /dev/null
         '''
 }
 
