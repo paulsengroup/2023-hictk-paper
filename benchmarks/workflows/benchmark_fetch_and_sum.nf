@@ -148,9 +148,11 @@ process fetch_and_sum_hictk_cool {
         printf 'hictk\\tcooler\\t!{resolution}\\t' >> '!{outprefix}.mem'
 
         zcat '!{queries}' |
-            command time -f '%M' fetch_and_sum '!{mcool}::/resolutions/!{resolution}' \\
-                1> '!{outprefix}.txt' \\
-                2>> '!{outprefix}.mem'
+            command time -f '%M'                                     \\
+                         -o '!{outprefix}.mem'                       \\
+                         -a                                          \\
+                fetch_and_sum '!{mcool}::/resolutions/!{resolution}' \\
+                1> '!{outprefix}.txt'
         '''
 }
 
@@ -192,9 +194,11 @@ process fetch_and_sum_hictk_hic {
         printf 'hictk\\thic\\t!{resolution}\\t' >> '!{outprefix}.mem'
 
         zcat '!{queries}' |
-            command time -f '%M' fetch_and_sum '!{hic}' --resolution='!{resolution}' \\
-                1> '!{outprefix}.txt' \\
-                2>> '!{outprefix}.mem'
+            command time -f '%M'                                \\
+                         -o '!{outprefix}.mem'                  \\
+                         -a                                     \\
+            fetch_and_sum '!{hic}' --resolution='!{resolution}' \\
+                1> '!{outprefix}.txt'
         '''
 }
 
@@ -236,10 +240,12 @@ process fetch_and_sum_cooler {
         printf 'cooler\\tcooler\\t!{resolution}\\t' >> '!{outprefix}.mem'
 
         zcat '!{queries}' |
-            command time -f '%M' fetch_and_sum_cooler.py \\
+            command time -f '%M'                       \\
+                         -o '!{outprefix}.mem'         \\
+                         -a                            \\
+            fetch_and_sum_cooler.py                    \\
                 '!{mcool}::/resolutions/!{resolution}' \\
-                1> '!{outprefix}.txt' \\
-                2>> '!{outprefix}.mem'
+                1> '!{outprefix}.txt'
         '''
 }
 
@@ -281,10 +287,12 @@ process fetch_and_sum_straw {
         printf 'straw\\thic\\t!{resolution}\\t' >> '!{outprefix}.mem'
 
         zcat '!{queries}' |
-            command time -f '%M' fetch_and_sum_straw.py \\
-                '!{hic}' '!{resolution}' \\
-                1> '!{outprefix}.txt' \\
-                2>> '!{outprefix}.mem'
+            command time -f '%M'               \\
+                         -o '!{outprefix}.mem' \\
+                         -a                    \\
+            fetch_and_sum_straw.py             \\
+                '!{hic}' '!{resolution}'       \\
+                1> '!{outprefix}.txt'          \\
         '''
 }
 
