@@ -40,11 +40,10 @@ def chrom_ranks() -> Dict[str, int]:
             "chr5",
             "chr6",
             "chr7",
-            "chrX",
             "chr8",
             "chr9",
-            "chr11",
             "chr10",
+            "chr11",
             "chr12",
             "chr13",
             "chr14",
@@ -52,11 +51,12 @@ def chrom_ranks() -> Dict[str, int]:
             "chr16",
             "chr17",
             "chr18",
-            "chr20",
             "chr19",
-            "chrY",
-            "chr22",
+            "chr20",
             "chr21",
+            "chr22",
+            "chrX",
+            "chrY",
         ]
     )
 

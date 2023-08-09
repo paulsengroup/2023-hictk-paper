@@ -28,7 +28,14 @@ def make_cli():
     return cli
 
 
-def plot_barplot(df: pd.DataFrame, x: str, y: str, title: str, out_prefix: pathlib.Path, write_labels: bool):
+def plot_barplot(
+    df: pd.DataFrame,
+    x: str,
+    y: str,
+    title: str,
+    out_prefix: pathlib.Path,
+    write_labels: bool,
+):
     fig, ax = plt.subplots(1, 1)
     df = df.copy()
 
@@ -141,8 +148,16 @@ def main():
 
     df["tool"] = df["tool"] + "_" + df["format"]
 
-    plot_runtime(df, args["title"] + " (runtime)", pathlib.Path(str(args["output_prefix"]) + "_runtime"))
-    plot_memory(df, args["title"] + " (memory)", pathlib.Path(str(args["output_prefix"]) + "_memory"))
+    plot_runtime(
+        df,
+        args["title"] + " (runtime)",
+        pathlib.Path(str(args["output_prefix"]) + "_runtime"),
+    )
+    plot_memory(
+        df,
+        args["title"] + " (memory)",
+        pathlib.Path(str(args["output_prefix"]) + "_memory"),
+    )
 
     df1 = compute_runtime_ratio(df)
     plot_perf_ratio(
@@ -153,7 +168,9 @@ def main():
 
     df1 = compute_memory_ratio(df)
     plot_mem_ratio(
-        df1, args["title"] + " - relative peak memory usage", pathlib.Path(str(args["output_prefix"]) + "_memory_ratio")
+        df1,
+        args["title"] + " - relative peak memory usage",
+        pathlib.Path(str(args["output_prefix"]) + "_memory_ratio"),
     )
 
 

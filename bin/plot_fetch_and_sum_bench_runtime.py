@@ -34,13 +34,15 @@ def plot_boxplot(df: pd.DataFrame, query_type: str, out_prefix: pathlib.Path) ->
     df = df.copy()
     df["median"] *= 1000
 
-    sns.boxplot(df, x="resolution", y="median", hue="tool", ax=ax)
+    sns.boxplot(df, x="resolution", y="median", hue="tool", fliersize=0, ax=ax)
     ax.set(
         title=f"Random queries ({query_type})",
         ylabel="Time (ms)",
         xlabel="Resolution (bp)",
         yscale="log",
     )
+
+    ax.tick_params(axis="x", rotation=45)
 
     plt.tight_layout()
     fig.savefig(out_prefix.with_suffix(".png"), dpi=300)
@@ -84,6 +86,8 @@ def plot_ratio(df: pd.DataFrame, query_type: str, out_prefix: pathlib.Path) -> p
         ylabel="relative speed",
         xlabel="Resolution (bp)",
     )
+
+    ax.tick_params(axis="x", rotation=45)
 
     plt.tight_layout()
     fig.savefig(out_prefix.with_suffix(".png"), dpi=300)

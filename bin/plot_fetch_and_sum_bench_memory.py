@@ -29,24 +29,6 @@ def make_cli():
     return cli
 
 
-def plot_boxplot(df: pd.DataFrame, query_type: str, out_prefix: pathlib.Path):
-    fig, ax = plt.subplots(1, 1)
-    df = df.copy()
-    df["median"] *= 1000
-
-    sns.boxplot(df, x="resolution", y="median", hue="tool", ax=ax)
-    ax.set(
-        title=f"Random queries ({query_type})",
-        ylabel="Time (ms)",
-        xlabel="Resolution (bp)",
-        yscale="log",
-    )
-
-    plt.tight_layout()
-    fig.savefig(out_prefix.with_suffix(".png"), dpi=300)
-    fig.savefig(out_prefix.with_suffix(".svg"))
-
-
 def compute_performance_ratio(df: pd.DataFrame) -> pd.DataFrame:
     # Find the fastest tool on average
     baseline_tool = df.groupby("tool")["median"].mean().idxmax()
@@ -85,6 +67,8 @@ def plot_ratio(df: pd.DataFrame, query_type: str, out_prefix: pathlib.Path):
         xlabel="Resolution (bp)",
     )
 
+    ax.tick_params(axis="x", rotation=45)
+
     plt.tight_layout()
     fig.savefig(out_prefix.with_suffix(".png"), dpi=300)
     fig.savefig(out_prefix.with_suffix(".svg"))
@@ -100,6 +84,7 @@ def main():
 
     fig, ax = plt.subplots(1, 1)
     sns.barplot(df, x="resolution", y="median", hue="tool", ax=ax)
+    ax.tick_params(axis="x", rotation=45)
 
     plt.tight_layout()
     fig.savefig(args["output_prefix"].with_suffix(".png"), dpi=300)
