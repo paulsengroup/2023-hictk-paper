@@ -68,10 +68,11 @@ process hictk_cooler_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk\\tcooler\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
+        command time -f '%e\\t%M'                                       \\
+                     -o '!{outname}'                                    \\
+                     -a                                                 \\
             hictk dump '!{mcool}::/resolutions/!{resolution}' --no-join \\
-                1> /dev/null \\
-                2>> '!{outname}'
+                1> /dev/null
         '''
 }
 
@@ -102,10 +103,11 @@ process hictk_hic_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk\\thic\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
+        command time -f '%e\\t%M'                                      \\
+                     -o '!{outname}'                                   \\
+                     -a                                                \\
             hictk dump '!{hic}' --resolution '!{resolution}' --no-join \\
-                1> /dev/null \\
-                2>> '!{outname}'
+                1> /dev/null
         '''
 }
 
@@ -138,10 +140,11 @@ process cooler_dump {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'cooler\\tcooler\\t!{resolution}\\t' >> '!{outname}'
 
-        command time -f '%e\\t%M' \\
+        command time -f '%e\\t%M'                              \\
+                     -o '!{outname}'                           \\
+                     -a                                        \\
             cooler dump '!{mcool}::/resolutions/!{resolution}' \\
-                1> /dev/null \\
-                2>> '!{outname}'
+                1> /dev/null
         '''
 }
 

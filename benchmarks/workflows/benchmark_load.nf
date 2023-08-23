@@ -40,7 +40,7 @@ workflow {
 }
 
 process preprocess_pairs {
-    label 'process_medium'
+    label 'process_high'
 
     input:
         path pairs
@@ -55,7 +55,7 @@ process preprocess_pairs {
 
         zcat '!{pairs}' |
         grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
-        zstd -T'!{task.cpus}' --adapt=min=1,max=8 -o '!{outname}'
+        zstd -T'!{task.cpus}' -19 -o '!{outname}'
         '''
 }
 
@@ -86,13 +86,15 @@ process hictk_load {
         '''
         set -o pipefail
 
-        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
+        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\tsize\\n' > '!{outname}'
         printf 'hictk\\tpairs\\t!{resolution}\\t' >> '!{outname}'
 
         mkdir tmp/
         export TMPDIR="$PWD/tmp"
 
         command time -f '%e\\t%M'             \\
+                     -o '!{outname}'          \\
+                     -a                       \\
             hictk load '!{chrom_sizes}'       \\
                        '!{resolution}'        \\
                        'out.cool'             \\
@@ -100,9 +102,11 @@ process hictk_load {
                        --assume-unsorted      \\
                        --batch-size 50000000  \\
                        --verbosity=1          \\
-                < <(zstdcat '!{pairs}')       \\
-                1> /dev/null                  \\
-                2>> '!{outname}'
+                < <(zstdcat '!{pairs}')
+
+        truncate -s -1 '!{outname}'  # Remove newline
+
+        printf '\\t%d\\n' "$(du -b out.cool | cut -f 1)" >> '!{outname}'
         '''
 }
 
@@ -133,10 +137,12 @@ process cooler_cload {
         '''
         set -o pipefail
 
-        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
+        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\tsize\\n' > '!{outname}'
         printf 'cooler\\tpairs\\t!{resolution}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'          \\
+                     -o '!{outname}'       \\
+                     -a                    \\
         cooler cload pairs                 \\
             --chrom1 2                     \\
             --chrom2 4                     \\
@@ -145,8 +151,11 @@ process cooler_cload {
             --chunksize 50000000           \\
             '!{chrom_sizes}:!{resolution}' \\
             <(zstdcat '!{pairs}')          \\
-            out.cool |&
-            grep -v 'INFO' >> '!{outname}'
+            out.cool
+
+        truncate -s -1 '!{outname}'  # Remove newline
+
+        printf '\\t%d\\n' "$(du -b out.cool | cut -f 1)" >> '!{outname}'
         '''
 }
 
