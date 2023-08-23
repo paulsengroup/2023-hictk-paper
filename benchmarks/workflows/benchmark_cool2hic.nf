@@ -40,6 +40,7 @@ process hictk_convert {
 
     shell:
         outname="${id}__${mcool.simpleName}__hictk.tsv"
+        memory_gb=task.memory.toGiga()
         '''
         set -o pipefail
 
@@ -48,13 +49,14 @@ process hictk_convert {
 
 
         mkdir tmp/
-        command time -f '%e\\t%M'                            \\
-                     -o '!{outname}'                         \\
-                     -a                                      \\
-            hictk convert '!{mcool}'                         \\
-                          out.hic                            \\
-                          --tmpdir tmp/                      \\
-                          --juicer-tools-jar "$HICTOOLS_JAR" \\
+        command time -f '%e\\t%M'                              \\
+                     -o '!{outname}'                           \\
+                     -a                                        \\
+            hictk convert '!{mcool}'                           \\
+                          out.hic                              \\
+                          --tmpdir tmp/                        \\
+                          --juicer-tools-jar "$HICTOOLS_JAR"   \\
+                          --juicer-tools-memory !{memory_gb}GB \\
                           -p '!{task.cpus}'
         '''
 }
