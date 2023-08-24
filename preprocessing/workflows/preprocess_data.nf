@@ -41,6 +41,10 @@ workflow {
         pairs_to_cool.out.cool,
         params.resolutions.join(",")
     )
+
+    hictk_convert(
+        Channel.fromPath(params.schistocerca_hic, checkIfExists: true)
+    )
 }
 
 process process_chrom_sizes {
@@ -207,5 +211,23 @@ process cooler_zoomify {
             -r '!{resolutions}' \\
             --balance           \\
             --balance-args="${balance_args[*]}"
+        '''
+}
+
+process hictk_convert {
+    publishDir "${params.data_dir}/input/matrices", mode: 'copy'
+
+    tag "${hic.simpleName}"
+
+    input:
+        path hic
+
+    output:
+        path "*.mcool", emit: mcool
+
+    shell:
+        outname="${hic.simpleName}.mcool"
+        '''
+        hictk convert '!{hic}' '!{outname}'
         '''
 }
