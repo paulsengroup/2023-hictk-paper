@@ -26,9 +26,8 @@ workflow {
 
     summarize(
         hictk_balance.out.tsv
-            .mix(hictk_balance.out.tsv)
             .mix(cooler_balance.out.tsv)
-            .map { it[4] }
+            .map { it[5] }
             .collect()
     )
 }
