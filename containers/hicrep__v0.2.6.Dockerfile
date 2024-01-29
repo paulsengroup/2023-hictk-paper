@@ -28,6 +28,8 @@ RUN python3.11 -m venv /opt/hicrep/hictkpy \
 
 RUN /opt/hicrep/hictkpy/bin/hicrep --help
 
+RUN mkdir -p /root/.conan2/p
+
 FROM ubuntu:22.04 as base
 
 COPY --from=hicrep       /opt/hicrep      /opt/hicrep
