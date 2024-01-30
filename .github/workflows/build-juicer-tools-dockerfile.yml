@@ -12,6 +12,7 @@ on:
       - "containers/juicer-tools*.Dockerfile"
       - "utils/4dn_pairs_to_txt/**"
       - "utils/CMakeLists.txt"
+      - "utils/conanfile.txt"
   pull_request:
     branches: [ main ]
     paths:
@@ -20,6 +21,7 @@ on:
       - "containers/juicer-tools*.Dockerfile"
       - "utils/4dn_pairs_to_txt/**"
       - "utils/CMakeLists.txt"
+      - "utils/conanfile.txt"
 
 jobs:
   build-juicer-tools-dockerfile:
