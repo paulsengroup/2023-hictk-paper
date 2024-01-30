@@ -11,7 +11,7 @@ target_sources(4dn_pairs_to_txt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/4dn_pairs_to
 target_link_libraries(
   4dn_pairs_to_txt
   PRIVATE utils_project_warnings utils_project_options
-  PUBLIC absl::strings fmt::fmt)
+  PUBLIC absl::strings fmt::fmt-header-only)
 
 target_include_directories(4dn_pairs_to_txt PRIVATE include/)
 
