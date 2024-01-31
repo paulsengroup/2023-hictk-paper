@@ -25,7 +25,7 @@ RUN conan install /tmp/utils/conanfile.txt               \
 && cmake --build /tmp/build -t 4dn_pairs_to_txt -j $(nproc) \
 && cmake --install /tmp/build
 
-FROM curlimages/curl:8.5.0 AS downloader
+FROM curlimages/curl:8.6.0 AS downloader
 
 ARG CONTAINER_VERSION
 ARG JUICERTOOLS_VER=${CONTAINER_VERSION}
