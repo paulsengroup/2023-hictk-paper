@@ -86,9 +86,18 @@ process preprocess_pairs_zst {
         '''
         set -o pipefail
 
+        cat > header.txt <<- EOM
+        ## pairs format v1.0
+        #sorted: chr1-chr2-pos1-pos2
+        #shape: upper triangle
+        #columns: readID chr1 pos1 chr2 pos2 strand1 strand2
+        EOM
+
+        cat header.txt | zstd -19 > '!{outname}'
+
         zcat '!{pairs}' |
         grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
-        zstd -T'!{task.cpus}' -19 -o '!{outname}'
+        zstd -T'!{task.cpus}' -19 >> '!{outname}'
         '''
 }
 
@@ -106,9 +115,18 @@ process preprocess_pairs_gz {
         '''
         set -o pipefail
 
+        cat > header.txt <<- EOM
+        ## pairs format v1.0
+        #sorted: chr1-chr2-pos1-pos2
+        #shape: upper triangle
+        #columns: readID chr1 pos1 chr2 pos2 strand1 strand2
+        EOM
+
+        cat header.txt | pigz -9 > '!{outname}'
+
         zcat '!{pairs}' |
         grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
-        pigz -p '!{task.cpus}' -9 > '!{outname}'
+        pigz -p '!{task.cpus}' -9 >> '!{outname}'
         '''
 }
 

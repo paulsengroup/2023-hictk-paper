@@ -12,7 +12,7 @@ fi
 
 path_to_pairs="$1"
 path_to_output="$2"
-tmpdir="$(mktemp -d -t "$3/hictk-tmp-XXXXXXXXXX")"
+tmpdir="$(mktemp -d -p "$3" -t "hictk-tmp-XXXXXXXXXX")"
 hic_tools_jar="$4"
 resolution="$5"
 cpus="$6"
