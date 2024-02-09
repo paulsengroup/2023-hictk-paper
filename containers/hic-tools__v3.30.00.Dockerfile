@@ -59,7 +59,7 @@ RUN ln -s /usr/local/share/java/hic_tools/hic_tools*.jar /usr/local/share/java/h
 ENV HICTOOLS_JAR=/usr/local/share/java/hic_tools/hic_tools.jar
 
 RUN apt-get update \
-&& apt-get install -y openjdk-19-jre-headless pigz procps \
+&& apt-get install -y openjdk-19-jre-headless pigz procps time \
 && rm -rf /var/lib/apt/lists/*
 
 ENV MKL_NUM_THREADS=1
