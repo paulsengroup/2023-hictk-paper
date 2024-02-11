@@ -11,33 +11,34 @@ workflow {
     Channel.of(params.cpu_cores).flatten().set { cpus }
     task_ids = Channel.of((1..params.replicates).toList()).flatten()
 
-    preprocess_pairs_zst(
+    prepare_pairs(
         pairs
     )
 
-    preprocess_pairs_gz(
+    prepare_pairs_for_juicer(
         pairs
     )
 
-    preprocess_pairs_zst.out.pairs
-        .set { pairs_filtered_zst }
-    preprocess_pairs_gz.out.pairs
-        .set { pairs_filtered_gz }
+    prepare_pairs.out.txt
+        .set { pairs_filtered }
 
-    task_ids.combine(pairs_filtered_zst)
+    prepare_pairs_for_juicer.out.txt
+        .set { pairs_juicer_filtered }
+
+    task_ids.combine(pairs_filtered)
         .combine(resolutions)
         .set { tasks_cooler }
 
-    task_ids.combine(pairs_filtered_zst)
+    task_ids.combine(pairs_filtered)
         .combine(resolutions)
         .set { tasks_hictk_cool }
 
-    task_ids.combine(pairs_filtered_zst)
+    task_ids.combine(pairs_filtered)
         .combine(resolutions)
         .combine(cpus)
         .set { tasks_hictk_hic }
 
-    task_ids.combine(pairs_filtered_gz)
+    task_ids.combine(pairs_juicer_filtered)
         .combine(resolutions)
         .combine(cpus)
         .set { tasks_hictools }
@@ -72,63 +73,55 @@ workflow {
     )
 }
 
-process preprocess_pairs_zst {
+
+process prepare_pairs {
     label 'process_high'
+
+    tag "${pairs.simpleName}"
 
     input:
         path pairs
 
     output:
-        path "*.pairs.zst", emit: pairs
+        path "*.pairs.gz", emit: txt
 
     shell:
-        outname="${pairs.simpleName}_filtered.pairs.zst"
+        outprefix="${pairs.simpleName}"
         '''
         set -o pipefail
 
-        cat > header.txt <<- EOM
-        ## pairs format v1.0
-        #sorted: chr1-chr2-pos1-pos2
-        #shape: upper triangle
-        #columns: readID chr1 pos1 chr2 pos2 strand1 strand2
-        EOM
-
-        cat header.txt | zstd -19 > '!{outname}'
-
+        # grep header lines as well as pairs referring to std chromosomes
         zcat '!{pairs}' |
-        grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
-        zstd -T'!{task.cpus}' -19 >> '!{outname}'
+            grep -P '#|chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
+            pigz -9 -p '!{task.cpus}' > '!{outprefix}.filtered.pairs.gz'
         '''
 }
 
-process preprocess_pairs_gz {
+
+process prepare_pairs_for_juicer {
     label 'process_high'
+
+    tag "${pairs.simpleName}"
 
     input:
         path pairs
 
     output:
-        path "*.pairs.gz", emit: pairs
+        path "*.txt.gz", emit: txt
 
     shell:
-        outname="${pairs.simpleName}_filtered.pairs.gz"
+        outprefix="${pairs.simpleName}"
         '''
         set -o pipefail
 
-        cat > header.txt <<- EOM
-        ## pairs format v1.0
-        #sorted: chr1-chr2-pos1-pos2
-        #shape: upper triangle
-        #columns: readID chr1 pos1 chr2 pos2 strand1 strand2
-        EOM
-
-        cat header.txt | pigz -9 > '!{outname}'
-
+        # grep header lines as well as pairs referring to std chromosomes
         zcat '!{pairs}' |
-        grep -P 'chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
-        pigz -p '!{task.cpus}' -9 >> '!{outname}'
+            grep -P '#|chr[\\dXY]+\\s\\d+\\schr[\\dXY]+\\s' |
+            4dn_pairs_to_txt |
+            pigz -9 -p '!{task.cpus}' > '!{outprefix}.filtered.txt.gz'
         '''
 }
+
 
 process hictk_load_cool {
     publishDir "${params.outdir}/hictk/cool", mode: 'copy'
@@ -164,17 +157,17 @@ process hictk_load_cool {
         mkdir tmp/
         export TMPDIR="$PWD/tmp"
 
-        command time -f '%e\\t%M'             \\
-                     -o '!{outname}'          \\
-                     -a                       \\
-            hictk load '!{chrom_sizes}'       \\
-                       '!{resolution}'        \\
-                       'out.cool'             \\
-                       --format 4dn           \\
-                       --assume-unsorted      \\
-                       --batch-size 50000000  \\
-                       --verbosity=1          \\
-                < <(zstdcat '!{pairs}')
+        command time -f '%e\\t%M'                 \\
+                     -o '!{outname}'              \\
+                     -a                           \\
+            hictk load '!{chrom_sizes}'           \\
+                       'out.cool'                 \\
+                       --bin-size '!{resolution}' \\
+                       --format 4dn               \\
+                       --assume-unsorted          \\
+                       --chunk-size 50000000      \\
+                       --verbosity=1              \\
+                < <(zcat '!{pairs}')
 
         truncate -s -1 '!{outname}'  # Remove newline
 
@@ -217,17 +210,18 @@ process hictk_load_hic {
         mkdir tmp/
         export TMPDIR="$PWD/tmp"
 
-        command time -f '%e\\t%M'             \\
-                     -o '!{outname}'          \\
-                     -a                       \\
-            hictk load '!{chrom_sizes}'       \\
-                       '!{resolution}'        \\
-                       'out.hic'              \\
-                       --format 4dn           \\
-                       --assume-unsorted      \\
-                       --batch-size 50000000  \\
-                       --verbosity=1          \\
-                < <(zstdcat '!{pairs}')
+        command time -f '%e\\t%M'                 \\
+                     -o '!{outname}'              \\
+                     -a                           \\
+            hictk load '!{chrom_sizes}'           \\
+                       'out.hic'                  \\
+                       --bin-size '!{resolution}' \\
+                       --format 4dn               \\
+                       --assume-unsorted          \\
+                       --chunk-size 50000000      \\
+                       --verbosity=1              \\
+                       --threads='!{task.cpus}'   \\
+                < <(zcat '!{pairs}')
 
         truncate -s -1 '!{outname}'  # Remove newline
 
@@ -277,7 +271,7 @@ process cooler_cload {
             --pos2 5                       \\
             --chunksize 50000000           \\
             '!{chrom_sizes}:!{resolution}' \\
-            <(zstdcat '!{pairs}')          \\
+            <(zcat '!{pairs}')             \\
             out.cool
 
         truncate -s -1 '!{outname}'  # Remove newline
@@ -290,7 +284,7 @@ process cooler_cload {
 process hictools_pre {
     publishDir "${params.outdir}/hictools/", mode: 'copy'
 
-    memory 650.GB
+    memory 300.GB
     label 'process_very_long'
 
     tag "${pairs.simpleName}"
@@ -333,8 +327,6 @@ process hictools_pre {
                 '!{resolution}' \\
                 '!{cpus}' \\
                 !{memory_gb}G
-
-        java -jar -Xmx
 
         truncate -s -1 '!{outname}'  # Remove newline
 
