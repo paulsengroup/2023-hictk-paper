@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 
-FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-17:20240126 as builder
+FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-17:20240224 as builder
 
 ARG POSSUM_GIT='https://github.com/robomics/EigenVector.git'
 ARG POSSUM_PATCHED_TAG='eba7fb5be7dc14da2f56cb2894a3f14339c43a7e'
