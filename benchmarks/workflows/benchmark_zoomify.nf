@@ -6,6 +6,7 @@
 nextflow.enable.dsl=2
 
 workflow {
+    Channel.fromPath(params.hic_file, checkIfExists: true).set { hic }
     Channel.fromPath(params.mcool_file, checkIfExists: true).set { mcools }
 
     // Pair base resolutions with target resolutions
@@ -15,38 +16,57 @@ workflow {
 
     task_ids = Channel.of((1..params.replicates).toList()).flatten()
 
+    task_ids.combine(hic)
+        .combine(resolutions)
+        .set { tasks_hic }
     task_ids.combine(mcools)
         .combine(resolutions)
-        .set { tasks }
+        .set { tasks_cool }
 
-    hictk_zoomify(
-        tasks
+
+    hictk_zoomify_hic_st(
+        tasks_hic
+    )
+
+    hictk_zoomify_hic_mt4(
+        tasks_hic
+    )
+
+    hictk_zoomify_hic_mt8(
+        tasks_hic
+    )
+
+    hictk_zoomify_cool(
+        tasks_cool
     )
 
     cooler_coarsen_st(
-        tasks
+        tasks_cool
     )
 
     cooler_coarsen_mt4(
-        tasks
+        tasks_cool
     )
 
     cooler_coarsen_mt8(
-        tasks
+        tasks_cool
     )
 
     summarize(
-        hictk_zoomify.out.tsv
+        hictk_zoomify_cool.out.tsv
             .mix(cooler_coarsen_st.out.tsv)
             .mix(cooler_coarsen_mt4.out.tsv)
             .mix(cooler_coarsen_mt8.out.tsv)
+            .mix(hictk_zoomify_hic_st.out.tsv)
+            .mix(hictk_zoomify_hic_mt4.out.tsv)
+            .mix(hictk_zoomify_hic_mt8.out.tsv)
             .map { it[5] }
             .collect()
     )
 }
 
 
-process hictk_zoomify {
+process hictk_zoomify_cool {
     publishDir "${params.outdir}/hictk/", mode: 'copy'
 
     cpus 1
@@ -68,7 +88,7 @@ process hictk_zoomify {
               path("*.tsv"), emit: tsv
 
     shell:
-        outname="${id}__${mcool.simpleName}__hictk__pairs__${resolution1}__${resolution2}.tsv"
+        outname="${id}__${mcool.simpleName}__hictk__cool__${resolution1}__${resolution2}.tsv"
         '''
         set -o pipefail
 
@@ -79,6 +99,132 @@ process hictk_zoomify {
             hictk zoomify                               \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 out.cool                                \\
+                --resolutions '!{resolution2}'          \\
+                --verbosity=1                           \\
+                --no-copy-base-resolution               \\
+                1> /dev/null                            \\
+                2>> '!{outname}'
+        '''
+}
+
+process hictk_zoomify_hic_st {
+    publishDir "${params.outdir}/hictk/", mode: 'copy'
+
+    cpus 1
+
+    tag "${hic.fileName}_${resolution1}_${resolution2}_${id}"
+
+    input:
+        tuple val(id),
+              path(hic),
+              val(resolution1),
+              val(resolution2)
+
+    output:
+        tuple val(id),
+              val("hictk"),
+              val("hic"),
+              val(resolution1),
+              val(resolution2),
+              path("*.tsv"), emit: tsv
+
+    shell:
+        outname="${id}__${hic.simpleName}__hictk_st__hic__${resolution1}__${resolution2}.tsv"
+        '''
+        set -o pipefail
+
+        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
+        printf 'hictk_st\\thic\\t!{resolution2}\\t' >> '!{outname}'
+
+        command time -f '%e\\t%M'                       \\
+            hictk zoomify                               \\
+                '!{hic}'                                \\
+                out.hic                                 \\
+                --resolutions '!{resolution2}'          \\
+                --verbosity=1                           \\
+                --no-copy-base-resolution               \\
+                1> /dev/null                            \\
+                2>> '!{outname}'
+        '''
+}
+
+process hictk_zoomify_hic_mt4 {
+    publishDir "${params.outdir}/hictk/", mode: 'copy'
+
+    cpus 4
+
+    tag "${hic.fileName}_${resolution1}_${resolution2}_${id}"
+
+    input:
+        tuple val(id),
+              path(hic),
+              val(resolution1),
+              val(resolution2)
+
+    output:
+        tuple val(id),
+              val("hictk"),
+              val("hic"),
+              val(resolution1),
+              val(resolution2),
+              path("*.tsv"), emit: tsv
+
+    shell:
+        outname="${id}__${hic.simpleName}__hictk_mt4__hic__${resolution1}__${resolution2}.tsv"
+        '''
+        set -o pipefail
+
+        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
+        printf 'hictk_mt4\\thic\\t!{resolution2}\\t' >> '!{outname}'
+
+        command time -f '%e\\t%M'                       \\
+            hictk zoomify                               \\
+                '!{hic}'                                \\
+                out.hic                                 \\
+                --threads '!{task.cpus}'                \\
+                --resolutions '!{resolution2}'          \\
+                --verbosity=1                           \\
+                --no-copy-base-resolution               \\
+                1> /dev/null                            \\
+                2>> '!{outname}'
+        '''
+}
+
+
+process hictk_zoomify_hic_mt8 {
+    publishDir "${params.outdir}/hictk/", mode: 'copy'
+
+    cpus 8
+
+    tag "${hic.fileName}_${resolution1}_${resolution2}_${id}"
+
+    input:
+        tuple val(id),
+              path(hic),
+              val(resolution1),
+              val(resolution2)
+
+    output:
+        tuple val(id),
+              val("hictk"),
+              val("hic"),
+              val(resolution1),
+              val(resolution2),
+              path("*.tsv"), emit: tsv
+
+    shell:
+        outname="${id}__${hic.simpleName}__hictk_mt8__hic__${resolution1}__${resolution2}.tsv"
+        '''
+        set -o pipefail
+
+        printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
+        printf 'hictk_mt8\\thic\\t!{resolution2}\\t' >> '!{outname}'
+
+        command time -f '%e\\t%M'                       \\
+            hictk zoomify                               \\
+                '!{hic}'                                \\
+                out.hic                                 \\
+                --threads '!{task.cpus}'                \\
                 --resolutions '!{resolution2}'          \\
                 --verbosity=1                           \\
                 --no-copy-base-resolution               \\
