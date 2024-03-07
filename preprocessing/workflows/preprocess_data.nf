@@ -18,6 +18,12 @@ workflow {
         pairs
     )
 
+    pairs_to_single_res_hic9(
+        process_chrom_sizes.out.chrom_sizes,
+        prepare_pairs_for_juicer.out.txt.collect(),
+        Channel.fromList(params.resolutions)
+    )
+
     pairs_to_hic8(
         process_chrom_sizes.out.chrom_sizes,
         prepare_pairs_for_juicer.out.txt,
@@ -211,6 +217,38 @@ process cooler_zoomify {
             -r '!{resolutions}' \\
             --balance           \\
             --balance-args="${balance_args[*]}"
+        '''
+}
+
+
+process pairs_to_single_res_hic9 {
+    publishDir params.data_dir, mode: 'copy'
+
+    label 'process_medium'
+    label 'process_very_long'
+
+    tag "${pairs.simpleName}"
+
+    input:
+        path chrom_sizes
+        path pairs
+        val resolution
+
+    output:
+        path "*.hic9", emit: hic
+
+    shell:
+        memory_gb=task.memory.toGiga()
+        dest="${pairs.simpleName}.${resolution}.hic9"
+        '''
+        java -Xmx!{memory_gb}G -Xms!{memory_gb}G -jar "$HICTOOLS_JAR" \\
+            pre '!{pairs}'             \\
+                '!{dest}'              \\
+                '!{chrom_sizes}'       \\
+                -j !{task.cpus}        \\
+                --threads !{task.cpus} \\
+                -r '!{resolution}'     \\
+                -n
         '''
 }
 
