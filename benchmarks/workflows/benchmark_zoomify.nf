@@ -6,7 +6,6 @@
 nextflow.enable.dsl=2
 
 workflow {
-    Channel.fromPath(params.hic_file, checkIfExists: true).set { hic }
     Channel.fromPath(params.mcool_file, checkIfExists: true).set { mcools }
 
     // Pair base resolutions with target resolutions
@@ -16,9 +15,14 @@ workflow {
 
     task_ids = Channel.of((1..params.replicates).toList()).flatten()
 
-    task_ids.combine(hic)
+    task_ids.combine([params.hic_file_pattern])
         .combine(resolutions)
+        .map {
+            it[1] = file(it[1].replaceFirst(/__xxx__/, it[2].toString()), checkIfExists: true)
+            it
+        }
         .set { tasks_hic }
+
     task_ids.combine(mcools)
         .combine(resolutions)
         .set { tasks_cool }
@@ -96,14 +100,14 @@ process hictk_zoomify_cool {
         printf 'hictk\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             hictk zoomify                               \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 out.cool                                \\
                 --resolutions '!{resolution2}'          \\
                 --verbosity=1                           \\
-                --no-copy-base-resolution               \\
-                1> /dev/null                            \\
-                2>> '!{outname}'
+                --no-copy-base-resolution
         '''
 }
 
@@ -136,15 +140,19 @@ process hictk_zoomify_hic_st {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk_st\\thic\\t!{resolution2}\\t' >> '!{outname}'
 
+        mkdir tmp
+        export TMPDIR="$PWD/tmp"
+
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             hictk zoomify                               \\
                 '!{hic}'                                \\
                 out.hic                                 \\
                 --resolutions '!{resolution2}'          \\
                 --verbosity=1                           \\
-                --no-copy-base-resolution               \\
-                1> /dev/null                            \\
-                2>> '!{outname}'
+                --skip-all-vs-all                       \\
+                --no-copy-base-resolution
         '''
 }
 
@@ -177,16 +185,20 @@ process hictk_zoomify_hic_mt4 {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk_mt4\\thic\\t!{resolution2}\\t' >> '!{outname}'
 
+        mkdir tmp
+        export TMPDIR="$PWD/tmp"
+
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             hictk zoomify                               \\
                 '!{hic}'                                \\
                 out.hic                                 \\
                 --threads '!{task.cpus}'                \\
                 --resolutions '!{resolution2}'          \\
                 --verbosity=1                           \\
-                --no-copy-base-resolution               \\
-                1> /dev/null                            \\
-                2>> '!{outname}'
+                --skip-all-vs-all                       \\
+                --no-copy-base-resolution
         '''
 }
 
@@ -220,16 +232,20 @@ process hictk_zoomify_hic_mt8 {
         printf 'tool\\tformat\\tresolution\\ttime\\tmemory\\n' > '!{outname}'
         printf 'hictk_mt8\\thic\\t!{resolution2}\\t' >> '!{outname}'
 
+        mkdir tmp
+        export TMPDIR="$PWD/tmp"
+
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             hictk zoomify                               \\
                 '!{hic}'                                \\
                 out.hic                                 \\
                 --threads '!{task.cpus}'                \\
                 --resolutions '!{resolution2}'          \\
                 --verbosity=1                           \\
-                --no-copy-base-resolution               \\
-                1> /dev/null                            \\
-                2>> '!{outname}'
+                --skip-all-vs-all                       \\
+                --no-copy-base-resolution
         '''
 }
 
@@ -266,12 +282,13 @@ process cooler_coarsen_st {
         printf 'cooler_st\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             cooler coarsen                              \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 -o out.cool                             \\
                 -p '!{task.cpus}'                       \\
-                -k '!{factor}'                          |&
-                grep -v 'INFO' >> '!{outname}'
+                -k '!{factor}'
         '''
 }
 
@@ -308,12 +325,13 @@ process cooler_coarsen_mt4 {
         printf 'cooler_mt4\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             cooler coarsen                              \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 -o out.cool                             \\
                 -p '!{task.cpus}'                       \\
-                -k '!{factor}'                          |&
-                grep -v 'INFO' >> '!{outname}'
+                -k '!{factor}'
         '''
 }
 
@@ -350,12 +368,13 @@ process cooler_coarsen_mt8 {
         printf 'cooler_mt8\\tcooler\\t!{resolution2}\\t' >> '!{outname}'
 
         command time -f '%e\\t%M'                       \\
+                     -o '!{outname}'                    \\
+                     -a                                 \\
             cooler coarsen                              \\
                 '!{mcool}::/resolutions/!{resolution1}' \\
                 -o out.cool                             \\
                 -p '!{task.cpus}'                       \\
-                -k '!{factor}'                          |&
-                grep -v 'INFO' >> '!{outname}'
+                -k '!{factor}'
         '''
 }
 
