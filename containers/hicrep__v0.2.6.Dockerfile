@@ -17,7 +17,7 @@ RUN apt-get update \
 
 RUN /opt/hicrep/vanilla/bin/hicrep --help
 
-FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-17:20240126 as hicrep_hictk
+FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-17:20240318 as hicrep_hictk
 
 
 ARG HICREP_GIT='https://github.com/robomics/hicrep.git'

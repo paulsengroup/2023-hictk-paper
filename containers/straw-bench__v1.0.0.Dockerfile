@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 
-FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-17:20240126 as builder
+FROM ghcr.io/paulsengroup/ci-docker-images/ubuntu-22.04-cxx-clang-17:20240318 as builder
 
 ARG STRAW_GIT='https://github.com/aidenlab/straw.git'
 ARG STRAW_GIT_TAG='2525edc29bbb48463799cad94cbd6e5e810210a0'
