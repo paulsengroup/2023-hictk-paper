@@ -44,6 +44,8 @@ The rest of the workflows can be run in any order:
 ```bash
 cd benchmarks/
 
+./run_benchmark_balance_16c.sh
+./run_benchmark_balance.sh
 ./run_benchmark_cool2hic.sh
 ./run_benchmark_dump_chrom.sh
 ./run_benchmark_dump_gw.sh
@@ -51,7 +53,6 @@ cd benchmarks/
 ./run_benchmark_hic2ool.sh
 ./run_benchmark_hicrep.sh
 ./run_benchmark_load.sh
-./run_benchmark_workflow.sh
 ./run_benchmark_zoomify.sh
 ```
 
