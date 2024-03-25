@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ghcr.io/paulsengroup/hictk:0.0.10 AS base
+FROM ghcr.io/paulsengroup/hictk:0.0.11 AS base
 
 ARG CONTAINER_VERSION
 
